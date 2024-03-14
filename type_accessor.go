@@ -1,69 +1,99 @@
-package cimgui
+package imgui
 
 // #include "cimgui_wrapper.h"
 // #include "util.h"
 import "C"
 import "unsafe"
 
-func (io ImGuiIO) SetMouseButtonDown(i int, down bool) {
-	C.ImGuiIO_SetMouseButtonDown(io.handle(), C.int(i), C.bool(down))
+func (io IO) SetMouseButtonDown(i int, down bool) {
+	rawIO, rawIOFin := io.handle()
+	defer rawIOFin()
+
+	C.wrap_ImGuiIO_SetMouseButtonDown(rawIO, C.int(i), C.bool(down))
 }
 
-func (io ImGuiIO) AddMouseWheelDelta(horizontal, vertical float32) {
-	v := io.GetMouseWheel() + vertical
-	h := io.GetMouseWheelH() + horizontal
+func (io IO) AddMouseWheelDelta(horizontal, vertical float32) {
+	v := io.MouseWheel() + vertical
+	h := io.MouseWheelH() + horizontal
 	io.SetMouseWheel(v)
 	io.SetMouseWheelH(h)
 }
 
 // Commands returns the list of draw commands.
 // Typically 1 command = 1 GPU draw call, unless the command is a callback.
-func (d ImDrawData) CommandLists() []ImDrawList {
-	count := d.GetCmdListsCount()
-	lists := make([]ImDrawList, count)
-	for i := 0; i < count; i++ {
+func (d DrawData) CommandLists() []DrawList {
+	count := d.CmdListsCount()
+	lists := make([]DrawList, count)
+	for i := int32(0); i < count; i++ {
 		lists[i] = d.getDrawListAt(i)
 	}
 	return lists
 }
 
-func (d ImDrawData) getDrawListAt(idx int) ImDrawList {
-	return (ImDrawList)(unsafe.Pointer(C.DrawData_GetDrawListAt(d.handle(), C.int(idx))))
+func (d DrawData) getDrawListAt(idx int32) DrawList {
+	drawDataArg, drawDataFin := d.handle()
+	defer drawDataFin()
+	return *newDrawListFromC(C.wrap_DrawData_GetDrawListAt(drawDataArg, C.int(idx)))
 }
 
-func (d ImDrawList) GetVertexBuffer() (unsafe.Pointer, int) {
-	buffer := d.c().VtxBuffer.Data
-	bufferSize := C.sizeof_ImDrawVert * d.c().VtxBuffer.Size
+func (d DrawList) GetVertexBuffer() (unsafe.Pointer, int) {
+	// TODO: it is possible that this field will become available on go-side after implementing more field types
+	dataArg, dataFin := d.c()
+	defer dataFin()
+	buffer := dataArg.VtxBuffer.Data
+	bufferSize := C.sizeof_ImDrawVert * dataArg.VtxBuffer.Size
 	return unsafe.Pointer(buffer), int(bufferSize)
 }
 
-func (d ImDrawList) GetIndexBuffer() (unsafe.Pointer, int) {
-	buffer := d.c().IdxBuffer.Data
-	bufferSize := C.sizeof_ImDrawIdx * d.c().IdxBuffer.Size
+func (d DrawList) GetIndexBuffer() (unsafe.Pointer, int) {
+	// TODO: it is possible that this field will become available on go-side after implementing more field types
+	dataArg, dataFin := d.c()
+	defer dataFin()
+	buffer := dataArg.IdxBuffer.Data
+	bufferSize := C.sizeof_ImDrawIdx * dataArg.IdxBuffer.Size
 	return unsafe.Pointer(buffer), int(bufferSize)
 }
 
-func (d ImDrawList) getDrawCmdAt(idx int) ImDrawCmd {
-	return (ImDrawCmd)(unsafe.Pointer(C.DrawList_GetDrawCmdAt(d.handle(), C.int(idx))))
+func (d DrawList) getDrawCmdAt(idx int) DrawCmd {
+	dataArg, dataFin := d.handle()
+	defer dataFin()
+
+	return *newDrawCmdFromC(C.wrap_DrawList_GetDrawCmdAt(dataArg, C.int(idx)))
 }
 
-func (d ImDrawList) Commands() []ImDrawCmd {
-	count := int(d.c().CmdBuffer.Size)
-	cmds := make([]ImDrawCmd, count)
+func (d DrawList) Commands() []DrawCmd {
+	// TODO: it is possible that this field will become available on go-side after implementing more field types
+	dataArg, dataFin := d.c()
+	defer dataFin()
+
+	count := int(dataArg.CmdBuffer.Size)
+	cmds := make([]DrawCmd, count)
 	for i := 0; i < count; i++ {
 		cmds[i] = d.getDrawCmdAt(i)
 	}
 	return cmds
 }
 
-func (d ImDrawCmd) HasUserCallback() bool {
-	return d.c().UserCallback != nil
+func (d DrawCmd) HasUserCallback() bool {
+	dataArg, dataFin := d.handle()
+	defer dataFin()
+
+	return dataArg.UserCallback != nil
 }
 
-func (d ImDrawCmd) CallUserCallback(list ImDrawList) {
-	C.DrawCmd_CallUserCallback(list.handle(), d.handle())
+func (d DrawCmd) CallUserCallback(list DrawList) {
+	dataArg, dataFin := d.handle()
+	defer dataFin()
+
+	listArg, listFin := list.handle()
+	defer listFin()
+
+	C.wrap_DrawCmd_CallUserCallback(listArg, dataArg)
 }
 
-func (fa ImFontGlyphRangesBuilder) BuildRanges(ranges GlyphRange) {
-	C.ImFontGlyphRangesBuilder_BuildRanges(fa.handle(), ranges.handle())
+func (fa FontGlyphRangesBuilder) BuildRanges(ranges GlyphRange) {
+	selfArg, selfFin := fa.handle()
+	defer selfFin()
+
+	C.ImFontGlyphRangesBuilder_BuildRanges(selfArg, ranges.handle())
 }

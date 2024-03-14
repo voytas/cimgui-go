@@ -1,7 +1,4 @@
-//go:build !exclude_cimgui_glfw
-// +build !exclude_cimgui_glfw
-
-package cimgui
+package imgui
 
 import (
 	"fmt"
@@ -15,20 +12,20 @@ import (
 )
 
 type Texture struct {
-	id     ImTextureID
+	ID     TextureID
 	Width  int
 	Height int
 }
 
 func NewTextureFromRgba(rgba *image.RGBA) *Texture {
-	texID := CreateTextureRgba(rgba, rgba.Bounds().Dx(), rgba.Bounds().Dy())
+	texID := textureManager.CreateTextureRgba(rgba, rgba.Bounds().Dx(), rgba.Bounds().Dy())
 
-	if texID == 0 {
+	if texID.Data == 0 {
 		return nil
 	}
 
 	texture := Texture{
-		id:     texID,
+		ID:     texID,
 		Width:  rgba.Bounds().Dx(),
 		Height: rgba.Bounds().Dy(),
 	}
@@ -40,11 +37,7 @@ func NewTextureFromRgba(rgba *image.RGBA) *Texture {
 }
 
 func (t *Texture) release() {
-	DeleteTexture(t.id)
-}
-
-func (t *Texture) ID() ImTextureID {
-	return t.id
+	textureManager.DeleteTexture(t.ID)
 }
 
 // ImageToRgba converts image.Image to *image.RGBA.

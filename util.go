@@ -1,7 +1,8 @@
-package cimgui
+package imgui
 
 // #include "util.h"
 import "C"
+
 import (
 	"fmt"
 	"reflect"
@@ -14,7 +15,7 @@ func VertexBufferLayout() (entrySize int, posOffset int, uvOffset int, colOffset
 	var posOffsetArg C.size_t
 	var uvOffsetArg C.size_t
 	var colOffsetArg C.size_t
-	C.GetVertexBufferLayout(&entrySizeArg, &posOffsetArg, &uvOffsetArg, &colOffsetArg)
+	C.wrap_GetVertexBufferLayout(&entrySizeArg, &posOffsetArg, &uvOffsetArg, &colOffsetArg)
 	entrySize = int(entrySizeArg)
 	posOffset = int(posOffsetArg)
 	uvOffset = int(uvOffsetArg)
@@ -25,7 +26,7 @@ func VertexBufferLayout() (entrySize int, posOffset int, uvOffset int, colOffset
 // IndexBufferLayout returns the byte size necessary to select fields in an index buffer of DrawList.
 func IndexBufferLayout() (entrySize int) {
 	var entrySizeArg C.size_t
-	C.GetIndexBufferLayout(&entrySizeArg)
+	C.wrap_GetIndexBufferLayout(&entrySizeArg)
 	entrySize = int(entrySizeArg)
 	return
 }
@@ -33,7 +34,7 @@ func IndexBufferLayout() (entrySize int) {
 type GlyphRange uintptr
 
 func NewGlyphRange() GlyphRange {
-	return GlyphRange(unsafe.Pointer(C.NewGlyphRange()))
+	return GlyphRange(unsafe.Pointer(C.wrap_NewGlyphRange()))
 }
 
 func (gr GlyphRange) handle() *C.ImVector_ImWchar {
@@ -41,24 +42,30 @@ func (gr GlyphRange) handle() *C.ImVector_ImWchar {
 }
 
 func (gr GlyphRange) Destroy() {
-	C.DestroyGlyphRange(gr.handle())
+	C.wrap_DestroyGlyphRange(gr.handle())
 }
 
-func (gr GlyphRange) Data() *ImWchar {
-	return (*ImWchar)(C.GlyphRange_GetData(gr.handle()))
+func (gr GlyphRange) Data() *Wchar {
+	return (*Wchar)(C.wrap_GlyphRange_GetData(gr.handle()))
 }
 
-func (fa ImFontAtlas) GetFontCount() int {
-	return int(C.ImFontAtlas_GetFontCount(fa.handle()))
+func (fa FontAtlas) FontCount() int {
+	selfArg, selfFin := fa.handle()
+	defer selfFin()
+
+	return int(C.wrap_ImFontAtlas_GetFontCount(selfArg))
 }
 
-func (self ImFontAtlas) GetTextureDataAsAlpha8() (pixels unsafe.Pointer, width int32, height int32, outBytesPerPixel int32) {
+func (self FontAtlas) TextureDataAsAlpha8() (pixels unsafe.Pointer, width int32, height int32, outBytesPerPixel int32) {
 	var p *C.uchar
 	var w C.int
 	var h C.int
 	var bp C.int
 
-	C.ImFontAtlas_GetTexDataAsAlpha8(self.handle(), &p, &w, &h, &bp)
+	selfArg, selfFin := self.handle()
+	defer selfFin()
+
+	C.ImFontAtlas_GetTexDataAsAlpha8(selfArg, &p, &w, &h, &bp)
 
 	pixels = unsafe.Pointer(p)
 	width = int32(w)
@@ -68,13 +75,16 @@ func (self ImFontAtlas) GetTextureDataAsAlpha8() (pixels unsafe.Pointer, width i
 	return
 }
 
-func (self ImFontAtlas) GetTextureDataAsRGBA32() (pixels unsafe.Pointer, width int32, height int32, outBytesPerPixel int32) {
+func (self FontAtlas) GetTextureDataAsRGBA32() (pixels unsafe.Pointer, width int32, height int32, outBytesPerPixel int32) {
 	var p *C.uchar
 	var w C.int
 	var h C.int
 	var bp C.int
 
-	C.ImFontAtlas_GetTexDataAsRGBA32(self.handle(), &p, &w, &h, &bp)
+	selfArg, selfFin := self.handle()
+	defer selfFin()
+
+	C.ImFontAtlas_GetTexDataAsRGBA32(selfArg, &p, &w, &h, &bp)
 
 	pixels = unsafe.Pointer(p)
 	width = int32(w)
@@ -89,13 +99,14 @@ func (self ImFontAtlas) GetTextureDataAsRGBA32() (pixels unsafe.Pointer, width i
 //
 // For example:
 //
-// 	var data []uint8
-// 	...
-// 	gl.TexImage2D(gl.TEXTURE_2D, ..., gl.UNSIGNED_BYTE, gl.Ptr(&data[0]))
+//	var data []uint8
+//	...
+//	gl.TexImage2D(gl.TEXTURE_2D, ..., gl.UNSIGNED_BYTE, gl.Ptr(&data[0]))
 func Ptr(data interface{}) unsafe.Pointer {
 	if data == nil {
 		return unsafe.Pointer(nil)
 	}
+
 	var addr unsafe.Pointer
 	v := reflect.ValueOf(data)
 	switch v.Type().Kind() {
@@ -117,5 +128,6 @@ func Ptr(data interface{}) unsafe.Pointer {
 	default:
 		panic(fmt.Errorf("unsupported type %s; must be a slice or pointer to a singular scalar value or the first element of an array or slice", v.Type()))
 	}
+
 	return addr
 }

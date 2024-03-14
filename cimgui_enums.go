@@ -1,1212 +1,2081 @@
-package cimgui
-
-type ImDrawFlags int
-
-const (
-	ImDrawFlags_None                    = 0
-	ImDrawFlags_Closed                  = 1
-	ImDrawFlags_RoundCornersTopLeft     = 16
-	ImDrawFlags_RoundCornersTopRight    = 32
-	ImDrawFlags_RoundCornersBottomLeft  = 64
-	ImDrawFlags_RoundCornersBottomRight = 128
-	ImDrawFlags_RoundCornersNone        = 256
-	ImDrawFlags_RoundCornersTop         = 48
-	ImDrawFlags_RoundCornersBottom      = 192
-	ImDrawFlags_RoundCornersLeft        = 80
-	ImDrawFlags_RoundCornersRight       = 160
-	ImDrawFlags_RoundCornersAll         = 240
-	ImDrawFlags_RoundCornersDefault_    = 240
-	ImDrawFlags_RoundCornersMask_       = 496
-)
-
-type ImDrawListFlags int
-
-const (
-	ImDrawListFlags_None                   = 0
-	ImDrawListFlags_AntiAliasedLines       = 1
-	ImDrawListFlags_AntiAliasedLinesUseTex = 2
-	ImDrawListFlags_AntiAliasedFill        = 4
-	ImDrawListFlags_AllowVtxOffset         = 8
-)
-
-type ImFontAtlasFlags int
-
-const (
-	ImFontAtlasFlags_None               = 0
-	ImFontAtlasFlags_NoPowerOfTwoHeight = 1
-	ImFontAtlasFlags_NoMouseCursors     = 2
-	ImFontAtlasFlags_NoBakedLines       = 4
-)
-
-type ImGuiActivateFlags int
-
-const (
-	ImGuiActivateFlags_None               = 0
-	ImGuiActivateFlags_PreferInput        = 1
-	ImGuiActivateFlags_PreferTweak        = 2
-	ImGuiActivateFlags_TryToPreserveState = 4
-)
-
-type ImGuiAxis int
-
-const (
-	ImGuiAxis_None = -1
-	ImGuiAxis_X    = 0
-	ImGuiAxis_Y    = 1
-)
-
-type ImGuiBackendFlags int
-
-const (
-	ImGuiBackendFlags_None                    = 0
-	ImGuiBackendFlags_HasGamepad              = 1
-	ImGuiBackendFlags_HasMouseCursors         = 2
-	ImGuiBackendFlags_HasSetMousePos          = 4
-	ImGuiBackendFlags_RendererHasVtxOffset    = 8
-	ImGuiBackendFlags_PlatformHasViewports    = 1024
-	ImGuiBackendFlags_HasMouseHoveredViewport = 2048
-	ImGuiBackendFlags_RendererHasViewports    = 4096
-)
-
-type ImGuiButtonFlagsPrivate int
-
-const (
-	ImGuiButtonFlags_PressedOnClick                = 16
-	ImGuiButtonFlags_PressedOnClickRelease         = 32
-	ImGuiButtonFlags_PressedOnClickReleaseAnywhere = 64
-	ImGuiButtonFlags_PressedOnRelease              = 128
-	ImGuiButtonFlags_PressedOnDoubleClick          = 256
-	ImGuiButtonFlags_PressedOnDragDropHold         = 512
-	ImGuiButtonFlags_Repeat                        = 1024
-	ImGuiButtonFlags_FlattenChildren               = 2048
-	ImGuiButtonFlags_AllowItemOverlap              = 4096
-	ImGuiButtonFlags_DontClosePopups               = 8192
-	ImGuiButtonFlags_AlignTextBaseLine             = 32768
-	ImGuiButtonFlags_NoKeyModifiers                = 65536
-	ImGuiButtonFlags_NoHoldingActiveId             = 131072
-	ImGuiButtonFlags_NoNavFocus                    = 262144
-	ImGuiButtonFlags_NoHoveredOnFocus              = 524288
-	ImGuiButtonFlags_PressedOnMask_                = 1008
-	ImGuiButtonFlags_PressedOnDefault_             = 32
-)
-
-type ImGuiButtonFlags int
-
-const (
-	ImGuiButtonFlags_None                = 0
-	ImGuiButtonFlags_MouseButtonLeft     = 1
-	ImGuiButtonFlags_MouseButtonRight    = 2
-	ImGuiButtonFlags_MouseButtonMiddle   = 4
-	ImGuiButtonFlags_MouseButtonMask_    = 7
-	ImGuiButtonFlags_MouseButtonDefault_ = 1
-)
-
-type ImGuiCol int
-
-const (
-	ImGuiCol_Text                  = 0
-	ImGuiCol_TextDisabled          = 1
-	ImGuiCol_WindowBg              = 2
-	ImGuiCol_ChildBg               = 3
-	ImGuiCol_PopupBg               = 4
-	ImGuiCol_Border                = 5
-	ImGuiCol_BorderShadow          = 6
-	ImGuiCol_FrameBg               = 7
-	ImGuiCol_FrameBgHovered        = 8
-	ImGuiCol_FrameBgActive         = 9
-	ImGuiCol_TitleBg               = 10
-	ImGuiCol_TitleBgActive         = 11
-	ImGuiCol_TitleBgCollapsed      = 12
-	ImGuiCol_MenuBarBg             = 13
-	ImGuiCol_ScrollbarBg           = 14
-	ImGuiCol_ScrollbarGrab         = 15
-	ImGuiCol_ScrollbarGrabHovered  = 16
-	ImGuiCol_ScrollbarGrabActive   = 17
-	ImGuiCol_CheckMark             = 18
-	ImGuiCol_SliderGrab            = 19
-	ImGuiCol_SliderGrabActive      = 20
-	ImGuiCol_Button                = 21
-	ImGuiCol_ButtonHovered         = 22
-	ImGuiCol_ButtonActive          = 23
-	ImGuiCol_Header                = 24
-	ImGuiCol_HeaderHovered         = 25
-	ImGuiCol_HeaderActive          = 26
-	ImGuiCol_Separator             = 27
-	ImGuiCol_SeparatorHovered      = 28
-	ImGuiCol_SeparatorActive       = 29
-	ImGuiCol_ResizeGrip            = 30
-	ImGuiCol_ResizeGripHovered     = 31
-	ImGuiCol_ResizeGripActive      = 32
-	ImGuiCol_Tab                   = 33
-	ImGuiCol_TabHovered            = 34
-	ImGuiCol_TabActive             = 35
-	ImGuiCol_TabUnfocused          = 36
-	ImGuiCol_TabUnfocusedActive    = 37
-	ImGuiCol_DockingPreview        = 38
-	ImGuiCol_DockingEmptyBg        = 39
-	ImGuiCol_PlotLines             = 40
-	ImGuiCol_PlotLinesHovered      = 41
-	ImGuiCol_PlotHistogram         = 42
-	ImGuiCol_PlotHistogramHovered  = 43
-	ImGuiCol_TableHeaderBg         = 44
-	ImGuiCol_TableBorderStrong     = 45
-	ImGuiCol_TableBorderLight      = 46
-	ImGuiCol_TableRowBg            = 47
-	ImGuiCol_TableRowBgAlt         = 48
-	ImGuiCol_TextSelectedBg        = 49
-	ImGuiCol_DragDropTarget        = 50
-	ImGuiCol_NavHighlight          = 51
-	ImGuiCol_NavWindowingHighlight = 52
-	ImGuiCol_NavWindowingDimBg     = 53
-	ImGuiCol_ModalWindowDimBg      = 54
-	ImGuiCol_COUNT                 = 55
-)
-
-type ImGuiColorEditFlags int
-
-const (
-	ImGuiColorEditFlags_None             = 0
-	ImGuiColorEditFlags_NoAlpha          = 2
-	ImGuiColorEditFlags_NoPicker         = 4
-	ImGuiColorEditFlags_NoOptions        = 8
-	ImGuiColorEditFlags_NoSmallPreview   = 16
-	ImGuiColorEditFlags_NoInputs         = 32
-	ImGuiColorEditFlags_NoTooltip        = 64
-	ImGuiColorEditFlags_NoLabel          = 128
-	ImGuiColorEditFlags_NoSidePreview    = 256
-	ImGuiColorEditFlags_NoDragDrop       = 512
-	ImGuiColorEditFlags_NoBorder         = 1024
-	ImGuiColorEditFlags_AlphaBar         = 65536
-	ImGuiColorEditFlags_AlphaPreview     = 131072
-	ImGuiColorEditFlags_AlphaPreviewHalf = 262144
-	ImGuiColorEditFlags_HDR              = 524288
-	ImGuiColorEditFlags_DisplayRGB       = 1048576
-	ImGuiColorEditFlags_DisplayHSV       = 2097152
-	ImGuiColorEditFlags_DisplayHex       = 4194304
-	ImGuiColorEditFlags_Uint8            = 8388608
-	ImGuiColorEditFlags_Float            = 16777216
-	ImGuiColorEditFlags_PickerHueBar     = 33554432
-	ImGuiColorEditFlags_PickerHueWheel   = 67108864
-	ImGuiColorEditFlags_InputRGB         = 134217728
-	ImGuiColorEditFlags_InputHSV         = 268435456
-	ImGuiColorEditFlags_DefaultOptions_  = 177209344
-	ImGuiColorEditFlags_DisplayMask_     = 7340032
-	ImGuiColorEditFlags_DataTypeMask_    = 25165824
-	ImGuiColorEditFlags_PickerMask_      = 100663296
-	ImGuiColorEditFlags_InputMask_       = 402653184
-)
-
-type ImGuiComboFlagsPrivate int
-
-const (
-	ImGuiComboFlags_CustomPreview = 1048576
-)
-
-type ImGuiComboFlags int
-
-const (
-	ImGuiComboFlags_None           = 0
-	ImGuiComboFlags_PopupAlignLeft = 1
-	ImGuiComboFlags_HeightSmall    = 2
-	ImGuiComboFlags_HeightRegular  = 4
-	ImGuiComboFlags_HeightLarge    = 8
-	ImGuiComboFlags_HeightLargest  = 16
-	ImGuiComboFlags_NoArrowButton  = 32
-	ImGuiComboFlags_NoPreview      = 64
-	ImGuiComboFlags_HeightMask_    = 30
-)
-
-type ImGuiCond int
-
-const (
-	ImGuiCond_None         = 0
-	ImGuiCond_Always       = 1
-	ImGuiCond_Once         = 2
-	ImGuiCond_FirstUseEver = 4
-	ImGuiCond_Appearing    = 8
-)
-
-type ImGuiConfigFlags int
-
-const (
-	ImGuiConfigFlags_None                    = 0
-	ImGuiConfigFlags_NavEnableKeyboard       = 1
-	ImGuiConfigFlags_NavEnableGamepad        = 2
-	ImGuiConfigFlags_NavEnableSetMousePos    = 4
-	ImGuiConfigFlags_NavNoCaptureKeyboard    = 8
-	ImGuiConfigFlags_NoMouse                 = 16
-	ImGuiConfigFlags_NoMouseCursorChange     = 32
-	ImGuiConfigFlags_DockingEnable           = 64
-	ImGuiConfigFlags_ViewportsEnable         = 1024
-	ImGuiConfigFlags_DpiEnableScaleViewports = 16384
-	ImGuiConfigFlags_DpiEnableScaleFonts     = 32768
-	ImGuiConfigFlags_IsSRGB                  = 1048576
-	ImGuiConfigFlags_IsTouchScreen           = 2097152
-)
-
-type ImGuiContextHookType int
-
-const (
-	ImGuiContextHookType_NewFramePre     = 0
-	ImGuiContextHookType_NewFramePost    = 1
-	ImGuiContextHookType_EndFramePre     = 2
-	ImGuiContextHookType_EndFramePost    = 3
-	ImGuiContextHookType_RenderPre       = 4
-	ImGuiContextHookType_RenderPost      = 5
-	ImGuiContextHookType_Shutdown        = 6
-	ImGuiContextHookType_PendingRemoval_ = 7
-)
-
-type ImGuiDataAuthority int
-
-const (
-	ImGuiDataAuthority_Auto     = 0
-	ImGuiDataAuthority_DockNode = 1
-	ImGuiDataAuthority_Window   = 2
-)
-
-type ImGuiDataTypePrivate int
-
-const (
-	ImGuiDataType_String  = 11
-	ImGuiDataType_Pointer = 12
-	ImGuiDataType_ID      = 13
-)
-
-type ImGuiDataType int
-
-const (
-	ImGuiDataType_S8     = 0
-	ImGuiDataType_U8     = 1
-	ImGuiDataType_S16    = 2
-	ImGuiDataType_U16    = 3
-	ImGuiDataType_S32    = 4
-	ImGuiDataType_U32    = 5
-	ImGuiDataType_S64    = 6
-	ImGuiDataType_U64    = 7
-	ImGuiDataType_Float  = 8
-	ImGuiDataType_Double = 9
-	ImGuiDataType_COUNT  = 10
-)
-
-type ImGuiDebugLogFlags int
-
-const (
-	ImGuiDebugLogFlags_None          = 0
-	ImGuiDebugLogFlags_EventActiveId = 1
-	ImGuiDebugLogFlags_EventFocus    = 2
-	ImGuiDebugLogFlags_EventPopup    = 4
-	ImGuiDebugLogFlags_EventNav      = 8
-	ImGuiDebugLogFlags_EventClipper  = 16
-	ImGuiDebugLogFlags_EventIO       = 32
-	ImGuiDebugLogFlags_EventDocking  = 64
-	ImGuiDebugLogFlags_EventViewport = 128
-	ImGuiDebugLogFlags_EventMask_    = 255
-	ImGuiDebugLogFlags_OutputToTTY   = 1024
-)
-
-type ImGuiDir int
-
-const (
-	ImGuiDir_None  = -1
-	ImGuiDir_Left  = 0
-	ImGuiDir_Right = 1
-	ImGuiDir_Up    = 2
-	ImGuiDir_Down  = 3
-	ImGuiDir_COUNT = 4
-)
-
-type ImGuiDockNodeFlagsPrivate int
-
-const (
-	ImGuiDockNodeFlags_DockSpace               = 1024
-	ImGuiDockNodeFlags_CentralNode             = 2048
-	ImGuiDockNodeFlags_NoTabBar                = 4096
-	ImGuiDockNodeFlags_HiddenTabBar            = 8192
-	ImGuiDockNodeFlags_NoWindowMenuButton      = 16384
-	ImGuiDockNodeFlags_NoCloseButton           = 32768
-	ImGuiDockNodeFlags_NoDocking               = 65536
-	ImGuiDockNodeFlags_NoDockingSplitMe        = 131072
-	ImGuiDockNodeFlags_NoDockingSplitOther     = 262144
-	ImGuiDockNodeFlags_NoDockingOverMe         = 524288
-	ImGuiDockNodeFlags_NoDockingOverOther      = 1048576
-	ImGuiDockNodeFlags_NoDockingOverEmpty      = 2097152
-	ImGuiDockNodeFlags_NoResizeX               = 4194304
-	ImGuiDockNodeFlags_NoResizeY               = 8388608
-	ImGuiDockNodeFlags_SharedFlagsInheritMask_ = -1
-	ImGuiDockNodeFlags_NoResizeFlagsMask_      = 12582944
-	ImGuiDockNodeFlags_LocalFlagsMask_         = 12713072
-	ImGuiDockNodeFlags_LocalFlagsTransferMask_ = 12712048
-	ImGuiDockNodeFlags_SavedFlagsMask_         = 12712992
-)
-
-type ImGuiDockNodeFlags int
-
-const (
-	ImGuiDockNodeFlags_None                   = 0
-	ImGuiDockNodeFlags_KeepAliveOnly          = 1
-	ImGuiDockNodeFlags_NoDockingInCentralNode = 4
-	ImGuiDockNodeFlags_PassthruCentralNode    = 8
-	ImGuiDockNodeFlags_NoSplit                = 16
-	ImGuiDockNodeFlags_NoResize               = 32
-	ImGuiDockNodeFlags_AutoHideTabBar         = 64
-)
-
-type ImGuiDockNodeState int
-
-const (
-	ImGuiDockNodeState_Unknown                                   = 0
-	ImGuiDockNodeState_HostWindowHiddenBecauseSingleWindow       = 1
-	ImGuiDockNodeState_HostWindowHiddenBecauseWindowsAreResizing = 2
-	ImGuiDockNodeState_HostWindowVisible                         = 3
-)
-
-type ImGuiDragDropFlags int
-
-const (
-	ImGuiDragDropFlags_None                     = 0
-	ImGuiDragDropFlags_SourceNoPreviewTooltip   = 1
-	ImGuiDragDropFlags_SourceNoDisableHover     = 2
-	ImGuiDragDropFlags_SourceNoHoldToOpenOthers = 4
-	ImGuiDragDropFlags_SourceAllowNullID        = 8
-	ImGuiDragDropFlags_SourceExtern             = 16
-	ImGuiDragDropFlags_SourceAutoExpirePayload  = 32
-	ImGuiDragDropFlags_AcceptBeforeDelivery     = 1024
-	ImGuiDragDropFlags_AcceptNoDrawDefaultRect  = 2048
-	ImGuiDragDropFlags_AcceptNoPreviewTooltip   = 4096
-	ImGuiDragDropFlags_AcceptPeekOnly           = 3072
-)
-
-type ImGuiFocusedFlags int
-
-const (
-	ImGuiFocusedFlags_None                = 0
-	ImGuiFocusedFlags_ChildWindows        = 1
-	ImGuiFocusedFlags_RootWindow          = 2
-	ImGuiFocusedFlags_AnyWindow           = 4
-	ImGuiFocusedFlags_NoPopupHierarchy    = 8
-	ImGuiFocusedFlags_DockHierarchy       = 16
-	ImGuiFocusedFlags_RootAndChildWindows = 3
-)
-
-type ImGuiHoveredFlags int
-
-const (
-	ImGuiHoveredFlags_None                         = 0
-	ImGuiHoveredFlags_ChildWindows                 = 1
-	ImGuiHoveredFlags_RootWindow                   = 2
-	ImGuiHoveredFlags_AnyWindow                    = 4
-	ImGuiHoveredFlags_NoPopupHierarchy             = 8
-	ImGuiHoveredFlags_DockHierarchy                = 16
-	ImGuiHoveredFlags_AllowWhenBlockedByPopup      = 32
-	ImGuiHoveredFlags_AllowWhenBlockedByActiveItem = 128
-	ImGuiHoveredFlags_AllowWhenOverlapped          = 256
-	ImGuiHoveredFlags_AllowWhenDisabled            = 512
-	ImGuiHoveredFlags_NoNavOverride                = 1024
-	ImGuiHoveredFlags_RectOnly                     = 416
-	ImGuiHoveredFlags_RootAndChildWindows          = 3
-)
-
-type ImGuiInputEventType int
-
-const (
-	ImGuiInputEventType_None          = 0
-	ImGuiInputEventType_MousePos      = 1
-	ImGuiInputEventType_MouseWheel    = 2
-	ImGuiInputEventType_MouseButton   = 3
-	ImGuiInputEventType_MouseViewport = 4
-	ImGuiInputEventType_Key           = 5
-	ImGuiInputEventType_Text          = 6
-	ImGuiInputEventType_Focus         = 7
-	ImGuiInputEventType_COUNT         = 8
-)
-
-type ImGuiInputFlags int
-
-const (
-	ImGuiInputFlags_None               = 0
-	ImGuiInputFlags_Repeat             = 1
-	ImGuiInputFlags_RepeatRateDefault  = 2
-	ImGuiInputFlags_RepeatRateNavMove  = 4
-	ImGuiInputFlags_RepeatRateNavTweak = 8
-	ImGuiInputFlags_RepeatRateMask_    = 14
-)
-
-type ImGuiInputSource int
-
-const (
-	ImGuiInputSource_None      = 0
-	ImGuiInputSource_Mouse     = 1
-	ImGuiInputSource_Keyboard  = 2
-	ImGuiInputSource_Gamepad   = 3
-	ImGuiInputSource_Clipboard = 4
-	ImGuiInputSource_Nav       = 5
-	ImGuiInputSource_COUNT     = 6
-)
-
-type ImGuiInputTextFlagsPrivate int
-
-const (
-	ImGuiInputTextFlags_Multiline    = 67108864
-	ImGuiInputTextFlags_NoMarkEdited = 134217728
-	ImGuiInputTextFlags_MergedItem   = 268435456
-)
-
-type ImGuiInputTextFlags int
-
-const (
-	ImGuiInputTextFlags_None                = 0
-	ImGuiInputTextFlags_CharsDecimal        = 1
-	ImGuiInputTextFlags_CharsHexadecimal    = 2
-	ImGuiInputTextFlags_CharsUppercase      = 4
-	ImGuiInputTextFlags_CharsNoBlank        = 8
-	ImGuiInputTextFlags_AutoSelectAll       = 16
-	ImGuiInputTextFlags_EnterReturnsTrue    = 32
-	ImGuiInputTextFlags_CallbackCompletion  = 64
-	ImGuiInputTextFlags_CallbackHistory     = 128
-	ImGuiInputTextFlags_CallbackAlways      = 256
-	ImGuiInputTextFlags_CallbackCharFilter  = 512
-	ImGuiInputTextFlags_AllowTabInput       = 1024
-	ImGuiInputTextFlags_CtrlEnterForNewLine = 2048
-	ImGuiInputTextFlags_NoHorizontalScroll  = 4096
-	ImGuiInputTextFlags_AlwaysOverwrite     = 8192
-	ImGuiInputTextFlags_ReadOnly            = 16384
-	ImGuiInputTextFlags_Password            = 32768
-	ImGuiInputTextFlags_NoUndoRedo          = 65536
-	ImGuiInputTextFlags_CharsScientific     = 131072
-	ImGuiInputTextFlags_CallbackResize      = 262144
-	ImGuiInputTextFlags_CallbackEdit        = 524288
-)
-
-type ImGuiItemFlags int
-
-const (
-	ImGuiItemFlags_None                     = 0
-	ImGuiItemFlags_NoTabStop                = 1
-	ImGuiItemFlags_ButtonRepeat             = 2
-	ImGuiItemFlags_Disabled                 = 4
-	ImGuiItemFlags_NoNav                    = 8
-	ImGuiItemFlags_NoNavDefaultFocus        = 16
-	ImGuiItemFlags_SelectableDontClosePopup = 32
-	ImGuiItemFlags_MixedValue               = 64
-	ImGuiItemFlags_ReadOnly                 = 128
-	ImGuiItemFlags_Inputable                = 256
-)
-
-type ImGuiItemStatusFlags int
-
-const (
-	ImGuiItemStatusFlags_None             = 0
-	ImGuiItemStatusFlags_HoveredRect      = 1
-	ImGuiItemStatusFlags_HasDisplayRect   = 2
-	ImGuiItemStatusFlags_Edited           = 4
-	ImGuiItemStatusFlags_ToggledSelection = 8
-	ImGuiItemStatusFlags_ToggledOpen      = 16
-	ImGuiItemStatusFlags_HasDeactivated   = 32
-	ImGuiItemStatusFlags_Deactivated      = 64
-	ImGuiItemStatusFlags_HoveredWindow    = 128
-	ImGuiItemStatusFlags_FocusedByTabbing = 256
-)
-
-type ImGuiKeyPrivate int
-
-const (
-	ImGuiKey_LegacyNativeKey_BEGIN = 0
-	ImGuiKey_LegacyNativeKey_END   = 512
-	ImGuiKey_Keyboard_BEGIN        = 512
-	ImGuiKey_Keyboard_END          = 617
-	ImGuiKey_Gamepad_BEGIN         = 617
-	ImGuiKey_Gamepad_END           = 641
-	ImGuiKey_Aliases_BEGIN         = 645
-	ImGuiKey_Aliases_END           = 652
-	ImGuiKey_NavKeyboardTweakSlow  = 641
-	ImGuiKey_NavKeyboardTweakFast  = 642
-	ImGuiKey_NavGamepadTweakSlow   = 627
-	ImGuiKey_NavGamepadTweakFast   = 628
-	ImGuiKey_NavGamepadActivate    = 622
-	ImGuiKey_NavGamepadCancel      = 620
-	ImGuiKey_NavGamepadMenu        = 619
-	ImGuiKey_NavGamepadInput       = 621
-)
-
-type ImGuiKey int
-
-const (
-	ImGuiKey_None               = 0
-	ImGuiKey_Tab                = 512
-	ImGuiKey_LeftArrow          = 513
-	ImGuiKey_RightArrow         = 514
-	ImGuiKey_UpArrow            = 515
-	ImGuiKey_DownArrow          = 516
-	ImGuiKey_PageUp             = 517
-	ImGuiKey_PageDown           = 518
-	ImGuiKey_Home               = 519
-	ImGuiKey_End                = 520
-	ImGuiKey_Insert             = 521
-	ImGuiKey_Delete             = 522
-	ImGuiKey_Backspace          = 523
-	ImGuiKey_Space              = 524
-	ImGuiKey_Enter              = 525
-	ImGuiKey_Escape             = 526
-	ImGuiKey_LeftCtrl           = 527
-	ImGuiKey_LeftShift          = 528
-	ImGuiKey_LeftAlt            = 529
-	ImGuiKey_LeftSuper          = 530
-	ImGuiKey_RightCtrl          = 531
-	ImGuiKey_RightShift         = 532
-	ImGuiKey_RightAlt           = 533
-	ImGuiKey_RightSuper         = 534
-	ImGuiKey_Menu               = 535
-	ImGuiKey_0                  = 536
-	ImGuiKey_1                  = 537
-	ImGuiKey_2                  = 538
-	ImGuiKey_3                  = 539
-	ImGuiKey_4                  = 540
-	ImGuiKey_5                  = 541
-	ImGuiKey_6                  = 542
-	ImGuiKey_7                  = 543
-	ImGuiKey_8                  = 544
-	ImGuiKey_9                  = 545
-	ImGuiKey_A                  = 546
-	ImGuiKey_B                  = 547
-	ImGuiKey_C                  = 548
-	ImGuiKey_D                  = 549
-	ImGuiKey_E                  = 550
-	ImGuiKey_F                  = 551
-	ImGuiKey_G                  = 552
-	ImGuiKey_H                  = 553
-	ImGuiKey_I                  = 554
-	ImGuiKey_J                  = 555
-	ImGuiKey_K                  = 556
-	ImGuiKey_L                  = 557
-	ImGuiKey_M                  = 558
-	ImGuiKey_N                  = 559
-	ImGuiKey_O                  = 560
-	ImGuiKey_P                  = 561
-	ImGuiKey_Q                  = 562
-	ImGuiKey_R                  = 563
-	ImGuiKey_S                  = 564
-	ImGuiKey_T                  = 565
-	ImGuiKey_U                  = 566
-	ImGuiKey_V                  = 567
-	ImGuiKey_W                  = 568
-	ImGuiKey_X                  = 569
-	ImGuiKey_Y                  = 570
-	ImGuiKey_Z                  = 571
-	ImGuiKey_F1                 = 572
-	ImGuiKey_F2                 = 573
-	ImGuiKey_F3                 = 574
-	ImGuiKey_F4                 = 575
-	ImGuiKey_F5                 = 576
-	ImGuiKey_F6                 = 577
-	ImGuiKey_F7                 = 578
-	ImGuiKey_F8                 = 579
-	ImGuiKey_F9                 = 580
-	ImGuiKey_F10                = 581
-	ImGuiKey_F11                = 582
-	ImGuiKey_F12                = 583
-	ImGuiKey_Apostrophe         = 584
-	ImGuiKey_Comma              = 585
-	ImGuiKey_Minus              = 586
-	ImGuiKey_Period             = 587
-	ImGuiKey_Slash              = 588
-	ImGuiKey_Semicolon          = 589
-	ImGuiKey_Equal              = 590
-	ImGuiKey_LeftBracket        = 591
-	ImGuiKey_Backslash          = 592
-	ImGuiKey_RightBracket       = 593
-	ImGuiKey_GraveAccent        = 594
-	ImGuiKey_CapsLock           = 595
-	ImGuiKey_ScrollLock         = 596
-	ImGuiKey_NumLock            = 597
-	ImGuiKey_PrintScreen        = 598
-	ImGuiKey_Pause              = 599
-	ImGuiKey_Keypad0            = 600
-	ImGuiKey_Keypad1            = 601
-	ImGuiKey_Keypad2            = 602
-	ImGuiKey_Keypad3            = 603
-	ImGuiKey_Keypad4            = 604
-	ImGuiKey_Keypad5            = 605
-	ImGuiKey_Keypad6            = 606
-	ImGuiKey_Keypad7            = 607
-	ImGuiKey_Keypad8            = 608
-	ImGuiKey_Keypad9            = 609
-	ImGuiKey_KeypadDecimal      = 610
-	ImGuiKey_KeypadDivide       = 611
-	ImGuiKey_KeypadMultiply     = 612
-	ImGuiKey_KeypadSubtract     = 613
-	ImGuiKey_KeypadAdd          = 614
-	ImGuiKey_KeypadEnter        = 615
-	ImGuiKey_KeypadEqual        = 616
-	ImGuiKey_GamepadStart       = 617
-	ImGuiKey_GamepadBack        = 618
-	ImGuiKey_GamepadFaceLeft    = 619
-	ImGuiKey_GamepadFaceRight   = 620
-	ImGuiKey_GamepadFaceUp      = 621
-	ImGuiKey_GamepadFaceDown    = 622
-	ImGuiKey_GamepadDpadLeft    = 623
-	ImGuiKey_GamepadDpadRight   = 624
-	ImGuiKey_GamepadDpadUp      = 625
-	ImGuiKey_GamepadDpadDown    = 626
-	ImGuiKey_GamepadL1          = 627
-	ImGuiKey_GamepadR1          = 628
-	ImGuiKey_GamepadL2          = 629
-	ImGuiKey_GamepadR2          = 630
-	ImGuiKey_GamepadL3          = 631
-	ImGuiKey_GamepadR3          = 632
-	ImGuiKey_GamepadLStickLeft  = 633
-	ImGuiKey_GamepadLStickRight = 634
-	ImGuiKey_GamepadLStickUp    = 635
-	ImGuiKey_GamepadLStickDown  = 636
-	ImGuiKey_GamepadRStickLeft  = 637
-	ImGuiKey_GamepadRStickRight = 638
-	ImGuiKey_GamepadRStickUp    = 639
-	ImGuiKey_GamepadRStickDown  = 640
-	ImGuiKey_ModCtrl            = 641
-	ImGuiKey_ModShift           = 642
-	ImGuiKey_ModAlt             = 643
-	ImGuiKey_ModSuper           = 644
-	ImGuiKey_MouseLeft          = 645
-	ImGuiKey_MouseRight         = 646
-	ImGuiKey_MouseMiddle        = 647
-	ImGuiKey_MouseX1            = 648
-	ImGuiKey_MouseX2            = 649
-	ImGuiKey_MouseWheelX        = 650
-	ImGuiKey_MouseWheelY        = 651
-	ImGuiKey_COUNT              = 652
-	ImGuiKey_NamedKey_BEGIN     = 512
-	ImGuiKey_NamedKey_END       = 652
-	ImGuiKey_NamedKey_COUNT     = 140
-	ImGuiKey_KeysData_SIZE      = 652
-	ImGuiKey_KeysData_OFFSET    = 0
-)
-
-type ImGuiLayoutType int
-
-const (
-	ImGuiLayoutType_Horizontal = 0
-	ImGuiLayoutType_Vertical   = 1
-)
-
-type ImGuiLogType int
-
-const (
-	ImGuiLogType_None      = 0
-	ImGuiLogType_TTY       = 1
-	ImGuiLogType_File      = 2
-	ImGuiLogType_Buffer    = 3
-	ImGuiLogType_Clipboard = 4
-)
-
-type ImGuiModFlags int
-
-const (
-	ImGuiModFlags_None  = 0
-	ImGuiModFlags_Ctrl  = 1
-	ImGuiModFlags_Shift = 2
-	ImGuiModFlags_Alt   = 4
-	ImGuiModFlags_Super = 8
-	ImGuiModFlags_All   = 15
-)
-
-type ImGuiMouseButton int
-
-const (
-	ImGuiMouseButton_Left   = 0
-	ImGuiMouseButton_Right  = 1
-	ImGuiMouseButton_Middle = 2
-	ImGuiMouseButton_COUNT  = 5
-)
-
-type ImGuiMouseCursor int
-
-const (
-	ImGuiMouseCursor_None       = -1
-	ImGuiMouseCursor_Arrow      = 0
-	ImGuiMouseCursor_TextInput  = 1
-	ImGuiMouseCursor_ResizeAll  = 2
-	ImGuiMouseCursor_ResizeNS   = 3
-	ImGuiMouseCursor_ResizeEW   = 4
-	ImGuiMouseCursor_ResizeNESW = 5
-	ImGuiMouseCursor_ResizeNWSE = 6
-	ImGuiMouseCursor_Hand       = 7
-	ImGuiMouseCursor_NotAllowed = 8
-	ImGuiMouseCursor_COUNT      = 9
-)
-
-type ImGuiNavHighlightFlags int
-
-const (
-	ImGuiNavHighlightFlags_None        = 0
-	ImGuiNavHighlightFlags_TypeDefault = 1
-	ImGuiNavHighlightFlags_TypeThin    = 2
-	ImGuiNavHighlightFlags_AlwaysDraw  = 4
-	ImGuiNavHighlightFlags_NoRounding  = 8
-)
-
-type ImGuiNavInput int
-
-const (
-	ImGuiNavInput_Activate    = 0
-	ImGuiNavInput_Cancel      = 1
-	ImGuiNavInput_Input       = 2
-	ImGuiNavInput_Menu        = 3
-	ImGuiNavInput_DpadLeft    = 4
-	ImGuiNavInput_DpadRight   = 5
-	ImGuiNavInput_DpadUp      = 6
-	ImGuiNavInput_DpadDown    = 7
-	ImGuiNavInput_LStickLeft  = 8
-	ImGuiNavInput_LStickRight = 9
-	ImGuiNavInput_LStickUp    = 10
-	ImGuiNavInput_LStickDown  = 11
-	ImGuiNavInput_FocusPrev   = 12
-	ImGuiNavInput_FocusNext   = 13
-	ImGuiNavInput_TweakSlow   = 14
-	ImGuiNavInput_TweakFast   = 15
-	ImGuiNavInput_COUNT       = 16
-)
-
-type ImGuiNavLayer int
-
-const (
-	ImGuiNavLayer_Main  = 0
-	ImGuiNavLayer_Menu  = 1
-	ImGuiNavLayer_COUNT = 2
-)
-
-type ImGuiNavMoveFlags int
-
-const (
-	ImGuiNavMoveFlags_None                = 0
-	ImGuiNavMoveFlags_LoopX               = 1
-	ImGuiNavMoveFlags_LoopY               = 2
-	ImGuiNavMoveFlags_WrapX               = 4
-	ImGuiNavMoveFlags_WrapY               = 8
-	ImGuiNavMoveFlags_AllowCurrentNavId   = 16
-	ImGuiNavMoveFlags_AlsoScoreVisibleSet = 32
-	ImGuiNavMoveFlags_ScrollToEdgeY       = 64
-	ImGuiNavMoveFlags_Forwarded           = 128
-	ImGuiNavMoveFlags_DebugNoResult       = 256
-	ImGuiNavMoveFlags_FocusApi            = 512
-	ImGuiNavMoveFlags_Tabbing             = 1024
-	ImGuiNavMoveFlags_Activate            = 2048
-	ImGuiNavMoveFlags_DontSetNavHighlight = 4096
-)
-
-type ImGuiNextItemDataFlags int
-
-const (
-	ImGuiNextItemDataFlags_None     = 0
-	ImGuiNextItemDataFlags_HasWidth = 1
-	ImGuiNextItemDataFlags_HasOpen  = 2
-)
-
-type ImGuiNextWindowDataFlags int
-
-const (
-	ImGuiNextWindowDataFlags_None              = 0
-	ImGuiNextWindowDataFlags_HasPos            = 1
-	ImGuiNextWindowDataFlags_HasSize           = 2
-	ImGuiNextWindowDataFlags_HasContentSize    = 4
-	ImGuiNextWindowDataFlags_HasCollapsed      = 8
-	ImGuiNextWindowDataFlags_HasSizeConstraint = 16
-	ImGuiNextWindowDataFlags_HasFocus          = 32
-	ImGuiNextWindowDataFlags_HasBgAlpha        = 64
-	ImGuiNextWindowDataFlags_HasScroll         = 128
-	ImGuiNextWindowDataFlags_HasViewport       = 256
-	ImGuiNextWindowDataFlags_HasDock           = 512
-	ImGuiNextWindowDataFlags_HasWindowClass    = 1024
-)
-
-type ImGuiOldColumnFlags int
-
-const (
-	ImGuiOldColumnFlags_None                   = 0
-	ImGuiOldColumnFlags_NoBorder               = 1
-	ImGuiOldColumnFlags_NoResize               = 2
-	ImGuiOldColumnFlags_NoPreserveWidths       = 4
-	ImGuiOldColumnFlags_NoForceWithinWindow    = 8
-	ImGuiOldColumnFlags_GrowParentContentsSize = 16
-)
-
-type ImGuiPlotType int
-
-const (
-	ImGuiPlotType_Lines     = 0
-	ImGuiPlotType_Histogram = 1
-)
-
-type ImGuiPopupFlags int
-
-const (
-	ImGuiPopupFlags_None                    = 0
-	ImGuiPopupFlags_MouseButtonLeft         = 0
-	ImGuiPopupFlags_MouseButtonRight        = 1
-	ImGuiPopupFlags_MouseButtonMiddle       = 2
-	ImGuiPopupFlags_MouseButtonMask_        = 31
-	ImGuiPopupFlags_MouseButtonDefault_     = 1
-	ImGuiPopupFlags_NoOpenOverExistingPopup = 32
-	ImGuiPopupFlags_NoOpenOverItems         = 64
-	ImGuiPopupFlags_AnyPopupId              = 128
-	ImGuiPopupFlags_AnyPopupLevel           = 256
-	ImGuiPopupFlags_AnyPopup                = 384
-)
-
-type ImGuiPopupPositionPolicy int
-
-const (
-	ImGuiPopupPositionPolicy_Default  = 0
-	ImGuiPopupPositionPolicy_ComboBox = 1
-	ImGuiPopupPositionPolicy_Tooltip  = 2
-)
-
-type ImGuiScrollFlags int
-
-const (
-	ImGuiScrollFlags_None               = 0
-	ImGuiScrollFlags_KeepVisibleEdgeX   = 1
-	ImGuiScrollFlags_KeepVisibleEdgeY   = 2
-	ImGuiScrollFlags_KeepVisibleCenterX = 4
-	ImGuiScrollFlags_KeepVisibleCenterY = 8
-	ImGuiScrollFlags_AlwaysCenterX      = 16
-	ImGuiScrollFlags_AlwaysCenterY      = 32
-	ImGuiScrollFlags_NoScrollParent     = 64
-	ImGuiScrollFlags_MaskX_             = 21
-	ImGuiScrollFlags_MaskY_             = 42
-)
-
-type ImGuiSelectableFlagsPrivate int
-
-const (
-	ImGuiSelectableFlags_NoHoldingActiveID    = 1048576
-	ImGuiSelectableFlags_SelectOnNav          = 2097152
-	ImGuiSelectableFlags_SelectOnClick        = 4194304
-	ImGuiSelectableFlags_SelectOnRelease      = 8388608
-	ImGuiSelectableFlags_SpanAvailWidth       = 16777216
-	ImGuiSelectableFlags_DrawHoveredWhenHeld  = 33554432
-	ImGuiSelectableFlags_SetNavIdOnHover      = 67108864
-	ImGuiSelectableFlags_NoPadWithHalfSpacing = 134217728
-)
-
-type ImGuiSelectableFlags int
-
-const (
-	ImGuiSelectableFlags_None             = 0
-	ImGuiSelectableFlags_DontClosePopups  = 1
-	ImGuiSelectableFlags_SpanAllColumns   = 2
-	ImGuiSelectableFlags_AllowDoubleClick = 4
-	ImGuiSelectableFlags_Disabled         = 8
-	ImGuiSelectableFlags_AllowItemOverlap = 16
-)
-
-type ImGuiSeparatorFlags int
-
-const (
-	ImGuiSeparatorFlags_None           = 0
-	ImGuiSeparatorFlags_Horizontal     = 1
-	ImGuiSeparatorFlags_Vertical       = 2
-	ImGuiSeparatorFlags_SpanAllColumns = 4
-)
-
-type ImGuiSliderFlagsPrivate int
-
-const (
-	ImGuiSliderFlags_Vertical = 1048576
-	ImGuiSliderFlags_ReadOnly = 2097152
-)
-
-type ImGuiSliderFlags int
-
-const (
-	ImGuiSliderFlags_None            = 0
-	ImGuiSliderFlags_AlwaysClamp     = 16
-	ImGuiSliderFlags_Logarithmic     = 32
-	ImGuiSliderFlags_NoRoundToFormat = 64
-	ImGuiSliderFlags_NoInput         = 128
-	ImGuiSliderFlags_InvalidMask_    = 1879048207
-)
-
-type ImGuiSortDirection int
-
-const (
-	ImGuiSortDirection_None       = 0
-	ImGuiSortDirection_Ascending  = 1
-	ImGuiSortDirection_Descending = 2
-)
-
-type ImGuiStyleVar int
-
-const (
-	ImGuiStyleVar_Alpha               = 0
-	ImGuiStyleVar_DisabledAlpha       = 1
-	ImGuiStyleVar_WindowPadding       = 2
-	ImGuiStyleVar_WindowRounding      = 3
-	ImGuiStyleVar_WindowBorderSize    = 4
-	ImGuiStyleVar_WindowMinSize       = 5
-	ImGuiStyleVar_WindowTitleAlign    = 6
-	ImGuiStyleVar_ChildRounding       = 7
-	ImGuiStyleVar_ChildBorderSize     = 8
-	ImGuiStyleVar_PopupRounding       = 9
-	ImGuiStyleVar_PopupBorderSize     = 10
-	ImGuiStyleVar_FramePadding        = 11
-	ImGuiStyleVar_FrameRounding       = 12
-	ImGuiStyleVar_FrameBorderSize     = 13
-	ImGuiStyleVar_ItemSpacing         = 14
-	ImGuiStyleVar_ItemInnerSpacing    = 15
-	ImGuiStyleVar_IndentSpacing       = 16
-	ImGuiStyleVar_CellPadding         = 17
-	ImGuiStyleVar_ScrollbarSize       = 18
-	ImGuiStyleVar_ScrollbarRounding   = 19
-	ImGuiStyleVar_GrabMinSize         = 20
-	ImGuiStyleVar_GrabRounding        = 21
-	ImGuiStyleVar_TabRounding         = 22
-	ImGuiStyleVar_ButtonTextAlign     = 23
-	ImGuiStyleVar_SelectableTextAlign = 24
-	ImGuiStyleVar_COUNT               = 25
-)
-
-type ImGuiTabBarFlagsPrivate int
-
-const (
-	ImGuiTabBarFlags_DockNode     = 1048576
-	ImGuiTabBarFlags_IsFocused    = 2097152
-	ImGuiTabBarFlags_SaveSettings = 4194304
-)
-
-type ImGuiTabBarFlags int
-
-const (
-	ImGuiTabBarFlags_None                         = 0
-	ImGuiTabBarFlags_Reorderable                  = 1
-	ImGuiTabBarFlags_AutoSelectNewTabs            = 2
-	ImGuiTabBarFlags_TabListPopupButton           = 4
-	ImGuiTabBarFlags_NoCloseWithMiddleMouseButton = 8
-	ImGuiTabBarFlags_NoTabListScrollingButtons    = 16
-	ImGuiTabBarFlags_NoTooltip                    = 32
-	ImGuiTabBarFlags_FittingPolicyResizeDown      = 64
-	ImGuiTabBarFlags_FittingPolicyScroll          = 128
-	ImGuiTabBarFlags_FittingPolicyMask_           = 192
-	ImGuiTabBarFlags_FittingPolicyDefault_        = 64
-)
-
-type ImGuiTabItemFlagsPrivate int
-
-const (
-	ImGuiTabItemFlags_SectionMask_  = 192
-	ImGuiTabItemFlags_NoCloseButton = 1048576
-	ImGuiTabItemFlags_Button        = 2097152
-	ImGuiTabItemFlags_Unsorted      = 4194304
-	ImGuiTabItemFlags_Preview       = 8388608
-)
-
-type ImGuiTabItemFlags int
-
-const (
-	ImGuiTabItemFlags_None                         = 0
-	ImGuiTabItemFlags_UnsavedDocument              = 1
-	ImGuiTabItemFlags_SetSelected                  = 2
-	ImGuiTabItemFlags_NoCloseWithMiddleMouseButton = 4
-	ImGuiTabItemFlags_NoPushId                     = 8
-	ImGuiTabItemFlags_NoTooltip                    = 16
-	ImGuiTabItemFlags_NoReorder                    = 32
-	ImGuiTabItemFlags_Leading                      = 64
-	ImGuiTabItemFlags_Trailing                     = 128
-)
-
-type ImGuiTableBgTarget int
-
-const (
-	ImGuiTableBgTarget_None   = 0
-	ImGuiTableBgTarget_RowBg0 = 1
-	ImGuiTableBgTarget_RowBg1 = 2
-	ImGuiTableBgTarget_CellBg = 3
-)
-
-type ImGuiTableColumnFlags int
-
-const (
-	ImGuiTableColumnFlags_None                 = 0
-	ImGuiTableColumnFlags_Disabled             = 1
-	ImGuiTableColumnFlags_DefaultHide          = 2
-	ImGuiTableColumnFlags_DefaultSort          = 4
-	ImGuiTableColumnFlags_WidthStretch         = 8
-	ImGuiTableColumnFlags_WidthFixed           = 16
-	ImGuiTableColumnFlags_NoResize             = 32
-	ImGuiTableColumnFlags_NoReorder            = 64
-	ImGuiTableColumnFlags_NoHide               = 128
-	ImGuiTableColumnFlags_NoClip               = 256
-	ImGuiTableColumnFlags_NoSort               = 512
-	ImGuiTableColumnFlags_NoSortAscending      = 1024
-	ImGuiTableColumnFlags_NoSortDescending     = 2048
-	ImGuiTableColumnFlags_NoHeaderLabel        = 4096
-	ImGuiTableColumnFlags_NoHeaderWidth        = 8192
-	ImGuiTableColumnFlags_PreferSortAscending  = 16384
-	ImGuiTableColumnFlags_PreferSortDescending = 32768
-	ImGuiTableColumnFlags_IndentEnable         = 65536
-	ImGuiTableColumnFlags_IndentDisable        = 131072
-	ImGuiTableColumnFlags_IsEnabled            = 16777216
-	ImGuiTableColumnFlags_IsVisible            = 33554432
-	ImGuiTableColumnFlags_IsSorted             = 67108864
-	ImGuiTableColumnFlags_IsHovered            = 134217728
-	ImGuiTableColumnFlags_WidthMask_           = 24
-	ImGuiTableColumnFlags_IndentMask_          = 196608
-	ImGuiTableColumnFlags_StatusMask_          = 251658240
-	ImGuiTableColumnFlags_NoDirectResize_      = 1073741824
-)
-
-type ImGuiTableFlags int
-
-const (
-	ImGuiTableFlags_None                       = 0
-	ImGuiTableFlags_Resizable                  = 1
-	ImGuiTableFlags_Reorderable                = 2
-	ImGuiTableFlags_Hideable                   = 4
-	ImGuiTableFlags_Sortable                   = 8
-	ImGuiTableFlags_NoSavedSettings            = 16
-	ImGuiTableFlags_ContextMenuInBody          = 32
-	ImGuiTableFlags_RowBg                      = 64
-	ImGuiTableFlags_BordersInnerH              = 128
-	ImGuiTableFlags_BordersOuterH              = 256
-	ImGuiTableFlags_BordersInnerV              = 512
-	ImGuiTableFlags_BordersOuterV              = 1024
-	ImGuiTableFlags_BordersH                   = 384
-	ImGuiTableFlags_BordersV                   = 1536
-	ImGuiTableFlags_BordersInner               = 640
-	ImGuiTableFlags_BordersOuter               = 1280
-	ImGuiTableFlags_Borders                    = 1920
-	ImGuiTableFlags_NoBordersInBody            = 2048
-	ImGuiTableFlags_NoBordersInBodyUntilResize = 4096
-	ImGuiTableFlags_SizingFixedFit             = 8192
-	ImGuiTableFlags_SizingFixedSame            = 16384
-	ImGuiTableFlags_SizingStretchProp          = 24576
-	ImGuiTableFlags_SizingStretchSame          = 32768
-	ImGuiTableFlags_NoHostExtendX              = 65536
-	ImGuiTableFlags_NoHostExtendY              = 131072
-	ImGuiTableFlags_NoKeepColumnsVisible       = 262144
-	ImGuiTableFlags_PreciseWidths              = 524288
-	ImGuiTableFlags_NoClip                     = 1048576
-	ImGuiTableFlags_PadOuterX                  = 2097152
-	ImGuiTableFlags_NoPadOuterX                = 4194304
-	ImGuiTableFlags_NoPadInnerX                = 8388608
-	ImGuiTableFlags_ScrollX                    = 16777216
-	ImGuiTableFlags_ScrollY                    = 33554432
-	ImGuiTableFlags_SortMulti                  = 67108864
-	ImGuiTableFlags_SortTristate               = 134217728
-	ImGuiTableFlags_SizingMask_                = 57344
-)
-
-type ImGuiTableRowFlags int
-
-const (
-	ImGuiTableRowFlags_None    = 0
-	ImGuiTableRowFlags_Headers = 1
-)
-
-type ImGuiTextFlags int
-
-const (
-	ImGuiTextFlags_None                       = 0
-	ImGuiTextFlags_NoWidthForLargeClippedText = 1
-)
-
-type ImGuiTooltipFlags int
-
-const (
-	ImGuiTooltipFlags_None                    = 0
-	ImGuiTooltipFlags_OverridePreviousTooltip = 1
-)
-
-type ImGuiTreeNodeFlagsPrivate int
-
-const (
-	ImGuiTreeNodeFlags_ClipLabelForTrailingButton = 1048576
-)
-
-type ImGuiTreeNodeFlags int
-
-const (
-	ImGuiTreeNodeFlags_None                 = 0
-	ImGuiTreeNodeFlags_Selected             = 1
-	ImGuiTreeNodeFlags_Framed               = 2
-	ImGuiTreeNodeFlags_AllowItemOverlap     = 4
-	ImGuiTreeNodeFlags_NoTreePushOnOpen     = 8
-	ImGuiTreeNodeFlags_NoAutoOpenOnLog      = 16
-	ImGuiTreeNodeFlags_DefaultOpen          = 32
-	ImGuiTreeNodeFlags_OpenOnDoubleClick    = 64
-	ImGuiTreeNodeFlags_OpenOnArrow          = 128
-	ImGuiTreeNodeFlags_Leaf                 = 256
-	ImGuiTreeNodeFlags_Bullet               = 512
-	ImGuiTreeNodeFlags_FramePadding         = 1024
-	ImGuiTreeNodeFlags_SpanAvailWidth       = 2048
-	ImGuiTreeNodeFlags_SpanFullWidth        = 4096
-	ImGuiTreeNodeFlags_NavLeftJumpsBackHere = 8192
-	ImGuiTreeNodeFlags_CollapsingHeader     = 26
-)
-
-type ImGuiViewportFlags int
-
-const (
-	ImGuiViewportFlags_None                = 0
-	ImGuiViewportFlags_IsPlatformWindow    = 1
-	ImGuiViewportFlags_IsPlatformMonitor   = 2
-	ImGuiViewportFlags_OwnedByApp          = 4
-	ImGuiViewportFlags_NoDecoration        = 8
-	ImGuiViewportFlags_NoTaskBarIcon       = 16
-	ImGuiViewportFlags_NoFocusOnAppearing  = 32
-	ImGuiViewportFlags_NoFocusOnClick      = 64
-	ImGuiViewportFlags_NoInputs            = 128
-	ImGuiViewportFlags_NoRendererClear     = 256
-	ImGuiViewportFlags_TopMost             = 512
-	ImGuiViewportFlags_Minimized           = 1024
-	ImGuiViewportFlags_NoAutoMerge         = 2048
-	ImGuiViewportFlags_CanHostOtherWindows = 4096
-)
-
-type ImGuiWindowDockStyleCol int
-
-const (
-	ImGuiWindowDockStyleCol_Text               = 0
-	ImGuiWindowDockStyleCol_Tab                = 1
-	ImGuiWindowDockStyleCol_TabHovered         = 2
-	ImGuiWindowDockStyleCol_TabActive          = 3
-	ImGuiWindowDockStyleCol_TabUnfocused       = 4
-	ImGuiWindowDockStyleCol_TabUnfocusedActive = 5
-	ImGuiWindowDockStyleCol_COUNT              = 6
-)
-
-type ImGuiWindowFlags int
-
-const (
-	ImGuiWindowFlags_None                      = 0
-	ImGuiWindowFlags_NoTitleBar                = 1
-	ImGuiWindowFlags_NoResize                  = 2
-	ImGuiWindowFlags_NoMove                    = 4
-	ImGuiWindowFlags_NoScrollbar               = 8
-	ImGuiWindowFlags_NoScrollWithMouse         = 16
-	ImGuiWindowFlags_NoCollapse                = 32
-	ImGuiWindowFlags_AlwaysAutoResize          = 64
-	ImGuiWindowFlags_NoBackground              = 128
-	ImGuiWindowFlags_NoSavedSettings           = 256
-	ImGuiWindowFlags_NoMouseInputs             = 512
-	ImGuiWindowFlags_MenuBar                   = 1024
-	ImGuiWindowFlags_HorizontalScrollbar       = 2048
-	ImGuiWindowFlags_NoFocusOnAppearing        = 4096
-	ImGuiWindowFlags_NoBringToFrontOnFocus     = 8192
-	ImGuiWindowFlags_AlwaysVerticalScrollbar   = 16384
-	ImGuiWindowFlags_AlwaysHorizontalScrollbar = 32768
-	ImGuiWindowFlags_AlwaysUseWindowPadding    = 65536
-	ImGuiWindowFlags_NoNavInputs               = 262144
-	ImGuiWindowFlags_NoNavFocus                = 524288
-	ImGuiWindowFlags_UnsavedDocument           = 1048576
-	ImGuiWindowFlags_NoDocking                 = 2097152
-	ImGuiWindowFlags_NoNav                     = 786432
-	ImGuiWindowFlags_NoDecoration              = 43
-	ImGuiWindowFlags_NoInputs                  = 786944
-	ImGuiWindowFlags_NavFlattened              = 8388608
-	ImGuiWindowFlags_ChildWindow               = 16777216
-	ImGuiWindowFlags_Tooltip                   = 33554432
-	ImGuiWindowFlags_Popup                     = 67108864
-	ImGuiWindowFlags_Modal                     = 134217728
-	ImGuiWindowFlags_ChildMenu                 = 268435456
-	ImGuiWindowFlags_DockNodeHost              = 536870912
+// Code generated by cmd/codegen from https://github.com/AllenDang/cimgui-go.
+// DO NOT EDIT.
+
+package imgui
+
+// Flags for ImDrawList functions
+// (Legacy: bit 0 must always correspond to ImDrawFlags_Closed to be backward compatible with old API using a bool. Bits 1..3 must be unused)
+// original name: ImDrawFlags_
+type DrawFlags int32
+
+const (
+	DrawFlagsNone = 0
+	// PathStroke(), AddPolyline(): specify that shape should be closed (Important: this is always == 1 for legacy reason)
+	DrawFlagsClosed = 1
+	// AddRect(), AddRectFilled(), PathRect(): enable rounding top-left corner only (when rounding > 0.0f, we default to all corners). Was 0x01.
+	DrawFlagsRoundCornersTopLeft = 16
+	// AddRect(), AddRectFilled(), PathRect(): enable rounding top-right corner only (when rounding > 0.0f, we default to all corners). Was 0x02.
+	DrawFlagsRoundCornersTopRight = 32
+	// AddRect(), AddRectFilled(), PathRect(): enable rounding bottom-left corner only (when rounding > 0.0f, we default to all corners). Was 0x04.
+	DrawFlagsRoundCornersBottomLeft = 64
+	// AddRect(), AddRectFilled(), PathRect(): enable rounding bottom-right corner only (when rounding > 0.0f, we default to all corners). Wax 0x08.
+	DrawFlagsRoundCornersBottomRight = 128
+	// AddRect(), AddRectFilled(), PathRect(): disable rounding on all corners (when rounding > 0.0f). This is NOT zero, NOT an implicit flag!
+	DrawFlagsRoundCornersNone   = 256
+	DrawFlagsRoundCornersTop    = 48
+	DrawFlagsRoundCornersBottom = 192
+	DrawFlagsRoundCornersLeft   = 80
+	DrawFlagsRoundCornersRight  = 160
+	DrawFlagsRoundCornersAll    = 240
+	// Default to ALL corners if none of the _RoundCornersXX flags are specified.
+	DrawFlagsRoundCornersDefault = 240
+	DrawFlagsRoundCornersMask    = 496
+)
+
+// Flags for ImDrawList instance. Those are set automatically by ImGui:: functions from ImGuiIO settings, and generally not manipulated directly.
+// It is however possible to temporarily alter flags between calls to ImDrawList:: functions.
+// original name: ImDrawListFlags_
+type DrawListFlags int32
+
+const (
+	DrawListFlagsNone = 0
+	// Enable anti-aliased lines/borders (*2 the number of triangles for 1.0f wide line or lines thin enough to be drawn using textures, otherwise *3 the number of triangles)
+	DrawListFlagsAntiAliasedLines = 1
+	// Enable anti-aliased lines/borders using textures when possible. Require backend to render with bilinear filtering (NOT point/nearest filtering).
+	DrawListFlagsAntiAliasedLinesUseTex = 2
+	// Enable anti-aliased edge around filled shapes (rounded rectangles, circles).
+	DrawListFlagsAntiAliasedFill = 4
+	// Can emit 'VtxOffset > 0' to allow large meshes. Set when 'ImGuiBackendFlags_RendererHasVtxOffset' is enabled.
+	DrawListFlagsAllowVtxOffset = 8
+)
+
+// Flags for ImFontAtlas build
+// original name: ImFontAtlasFlags_
+type FontAtlasFlags int32
+
+const (
+	FontAtlasFlagsNone = 0
+	// Don't round the height to next power of two
+	FontAtlasFlagsNoPowerOfTwoHeight = 1
+	// Don't build software mouse cursors into the atlas (save a little texture memory)
+	FontAtlasFlagsNoMouseCursors = 2
+	// Don't build thick line textures into the atlas (save a little texture memory, allow support for point/nearest filtering). The AntiAliasedLinesUseTex features uses them, otherwise they will be rendered using polygons (more expensive for CPU/GPU).
+	FontAtlasFlagsNoBakedLines = 4
+)
+
+// original name: ImGuiActivateFlags_
+type ActivateFlags int32
+
+const (
+	ActivateFlagsNone = 0
+	// Favor activation that requires keyboard text input (e.g. for Slider/Drag). Default for Enter key.
+	ActivateFlagsPreferInput = 1
+	// Favor activation for tweaking with arrows or gamepad (e.g. for Slider/Drag). Default for Space key and if keyboard is not used.
+	ActivateFlagsPreferTweak = 2
+	// Request widget to preserve state if it can (e.g. InputText will try to preserve cursor/selection)
+	ActivateFlagsTryToPreserveState = 4
+	// Activation requested by a tabbing request
+	ActivateFlagsFromTabbing = 8
+	// Activation requested by an item shortcut via SetNextItemShortcut() function.
+	ActivateFlagsFromShortcut = 16
+)
+
+// X/Y enums are fixed to 0/1 so they may be used to index ImVec2
+// original name: ImGuiAxis
+type Axis int32
+
+const (
+	AxisNone = -1
+	AxisX    = 0
+	AxisY    = 1
+)
+
+// Backend capabilities flags stored in io.BackendFlags. Set by imgui_impl_xxx or custom backend.
+// original name: ImGuiBackendFlags_
+type BackendFlags int32
+
+const (
+	BackendFlagsNone = 0
+	// Backend Platform supports gamepad and currently has one connected.
+	BackendFlagsHasGamepad = 1
+	// Backend Platform supports honoring GetMouseCursor() value to change the OS cursor shape.
+	BackendFlagsHasMouseCursors = 2
+	// Backend Platform supports io.WantSetMousePos requests to reposition the OS mouse position (only used if ImGuiConfigFlags_NavEnableSetMousePos is set).
+	BackendFlagsHasSetMousePos = 4
+	// Backend Renderer supports ImDrawCmd::VtxOffset. This enables output of large meshes (64K+ vertices) while still using 16-bit indices.
+	BackendFlagsRendererHasVtxOffset = 8
+	// Backend Platform supports multiple viewports.
+	BackendFlagsPlatformHasViewports = 1024
+	// Backend Platform supports calling io.AddMouseViewportEvent() with the viewport under the mouse. IF POSSIBLE, ignore viewports with the ImGuiViewportFlags_NoInputs flag (Win32 backend, GLFW 3.30+ backend can do this, SDL backend cannot). If this cannot be done, Dear ImGui needs to use a flawed heuristic to find the viewport under.
+	BackendFlagsHasMouseHoveredViewport = 2048
+	// Backend Renderer supports multiple viewports.
+	BackendFlagsRendererHasViewports = 4096
+)
+
+// Extend ImGuiButtonFlags_
+// original name: ImGuiButtonFlagsPrivate_
+type ButtonFlagsPrivate int32
+
+const (
+	// return true on click (mouse down event)
+	ButtonFlagsPressedOnClick = 16
+	// [Default] return true on click + release on same item <-- this is what the majority of Button are using
+	ButtonFlagsPressedOnClickRelease = 32
+	// return true on click + release even if the release event is not done while hovering the item
+	ButtonFlagsPressedOnClickReleaseAnywhere = 64
+	// return true on release (default requires click+release)
+	ButtonFlagsPressedOnRelease = 128
+	// return true on double-click (default requires click+release)
+	ButtonFlagsPressedOnDoubleClick = 256
+	// return true when held into while we are drag and dropping another item (used by e.g. tree nodes, collapsing headers)
+	ButtonFlagsPressedOnDragDropHold = 512
+	// hold to repeat
+	ButtonFlagsRepeat = 1024
+	// allow interactions even if a child window is overlapping
+	ButtonFlagsFlattenChildren = 2048
+	// require previous frame HoveredId to either match id or be null before being usable.
+	ButtonFlagsAllowOverlap = 4096
+	// disable automatically closing parent popup on press // [UNUSED]
+	ButtonFlagsDontClosePopups = 8192
+	// vertically align button to match text baseline - ButtonEx() only // FIXME: Should be removed and handled by SmallButton(), not possible currently because of DC.CursorPosPrevLine
+	ButtonFlagsAlignTextBaseLine = 32768
+	// disable mouse interaction if a key modifier is held
+	ButtonFlagsNoKeyModifiers = 65536
+	// don't set ActiveId while holding the mouse (ImGuiButtonFlags_PressedOnClick only)
+	ButtonFlagsNoHoldingActiveId = 131072
+	// don't override navigation focus when activated (FIXME: this is essentially used everytime an item uses ImGuiItemFlags_NoNav, but because legacy specs don't requires LastItemData to be set ButtonBehavior(), we can't poll g.LastItemData.InFlags)
+	ButtonFlagsNoNavFocus = 262144
+	// don't report as hovered when nav focus is on this item
+	ButtonFlagsNoHoveredOnFocus = 524288
+	// don't set key/input owner on the initial click (note: mouse buttons are keys! often, the key in question will be ImGuiKey_MouseLeft!)
+	ButtonFlagsNoSetKeyOwner = 1048576
+	// don't test key/input owner when polling the key (note: mouse buttons are keys! often, the key in question will be ImGuiKey_MouseLeft!)
+	ButtonFlagsNoTestKeyOwner   = 2097152
+	ButtonFlagsPressedOnMask    = 1008
+	ButtonFlagsPressedOnDefault = 32
+)
+
+// Flags for InvisibleButton() [extended in imgui_internal.h]
+// original name: ImGuiButtonFlags_
+type ButtonFlags int32
+
+const (
+	ButtonFlagsNone = 0
+	// React on left mouse button (default)
+	ButtonFlagsMouseButtonLeft = 1
+	// React on right mouse button
+	ButtonFlagsMouseButtonRight = 2
+	// React on center mouse button
+	ButtonFlagsMouseButtonMiddle  = 4
+	ButtonFlagsMouseButtonMask    = 7
+	ButtonFlagsMouseButtonDefault = 1
+)
+
+// Flags for ImGui::BeginChild()
+// (Legacy: bit 0 must always correspond to ImGuiChildFlags_Border to be backward compatible with old API using 'bool border = false'.
+// About using AutoResizeX/AutoResizeY flags:
+// - May be combined with SetNextWindowSizeConstraints() to set a min/max size for each axis (see "Demo->Child->Auto-resize with Constraints").
+// - Size measurement for a given axis is only performed when the child window is within visible boundaries, or is just appearing.
+//   - This allows BeginChild() to return false when not within boundaries (e.g. when scrolling), which is more optimal. BUT it won't update its auto-size while clipped.
+//     While not perfect, it is a better default behavior as the always-on performance gain is more valuable than the occasional "resizing after becoming visible again" glitch.
+//   - You may also use ImGuiChildFlags_AlwaysAutoResize to force an update even when child window is not in view.
+//     HOWEVER PLEASE UNDERSTAND THAT DOING SO WILL PREVENT BeginChild() FROM EVER RETURNING FALSE, disabling benefits of coarse clipping.
+//
+// original name: ImGuiChildFlags_
+type ChildFlags int32
+
+const (
+	ChildFlagsNone = 0
+	// Show an outer border and enable WindowPadding. (IMPORTANT: this is always == 1 == true for legacy reason)
+	ChildFlagsBorder = 1
+	// Pad with style.WindowPadding even if no border are drawn (no padding by default for non-bordered child windows because it makes more sense)
+	ChildFlagsAlwaysUseWindowPadding = 2
+	// Allow resize from right border (layout direction). Enable .ini saving (unless ImGuiWindowFlags_NoSavedSettings passed to window flags)
+	ChildFlagsResizeX = 4
+	// Allow resize from bottom border (layout direction). "
+	ChildFlagsResizeY = 8
+	// Enable auto-resizing width. Read "IMPORTANT: Size measurement" details above.
+	ChildFlagsAutoResizeX = 16
+	// Enable auto-resizing height. Read "IMPORTANT: Size measurement" details above.
+	ChildFlagsAutoResizeY = 32
+	// Combined with AutoResizeX/AutoResizeY. Always measure size even when child is hidden, always return true, always disable clipping optimization! NOT RECOMMENDED.
+	ChildFlagsAlwaysAutoResize = 64
+	// Style the child window like a framed item: use FrameBg, FrameRounding, FrameBorderSize, FramePadding instead of ChildBg, ChildRounding, ChildBorderSize, WindowPadding.
+	ChildFlagsFrameStyle = 128
+)
+
+// Enumeration for PushStyleColor() / PopStyleColor()
+// original name: ImGuiCol_
+type Col int32
+
+const (
+	ColText         = 0
+	ColTextDisabled = 1
+	// Background of normal windows
+	ColWindowBg = 2
+	// Background of child windows
+	ColChildBg = 3
+	// Background of popups, menus, tooltips windows
+	ColPopupBg      = 4
+	ColBorder       = 5
+	ColBorderShadow = 6
+	// Background of checkbox, radio button, plot, slider, text input
+	ColFrameBg        = 7
+	ColFrameBgHovered = 8
+	ColFrameBgActive  = 9
+	// Title bar
+	ColTitleBg = 10
+	// Title bar when focused
+	ColTitleBgActive = 11
+	// Title bar when collapsed
+	ColTitleBgCollapsed     = 12
+	ColMenuBarBg            = 13
+	ColScrollbarBg          = 14
+	ColScrollbarGrab        = 15
+	ColScrollbarGrabHovered = 16
+	ColScrollbarGrabActive  = 17
+	// Checkbox tick and RadioButton circle
+	ColCheckMark        = 18
+	ColSliderGrab       = 19
+	ColSliderGrabActive = 20
+	ColButton           = 21
+	ColButtonHovered    = 22
+	ColButtonActive     = 23
+	// Header* colors are used for CollapsingHeader, TreeNode, Selectable, MenuItem
+	ColHeader           = 24
+	ColHeaderHovered    = 25
+	ColHeaderActive     = 26
+	ColSeparator        = 27
+	ColSeparatorHovered = 28
+	ColSeparatorActive  = 29
+	// Resize grip in lower-right and lower-left corners of windows.
+	ColResizeGrip        = 30
+	ColResizeGripHovered = 31
+	ColResizeGripActive  = 32
+	// TabItem in a TabBar
+	ColTab                = 33
+	ColTabHovered         = 34
+	ColTabActive          = 35
+	ColTabUnfocused       = 36
+	ColTabUnfocusedActive = 37
+	// Preview overlay color when about to docking something
+	ColDockingPreview = 38
+	// Background color for empty node (e.g. CentralNode with no window docked into it)
+	ColDockingEmptyBg       = 39
+	ColPlotLines            = 40
+	ColPlotLinesHovered     = 41
+	ColPlotHistogram        = 42
+	ColPlotHistogramHovered = 43
+	// Table header background
+	ColTableHeaderBg = 44
+	// Table outer and header borders (prefer using Alpha=1.0 here)
+	ColTableBorderStrong = 45
+	// Table inner borders (prefer using Alpha=1.0 here)
+	ColTableBorderLight = 46
+	// Table row background (even rows)
+	ColTableRowBg = 47
+	// Table row background (odd rows)
+	ColTableRowBgAlt  = 48
+	ColTextSelectedBg = 49
+	// Rectangle highlighting a drop target
+	ColDragDropTarget = 50
+	// Gamepad/keyboard: current highlighted item
+	ColNavHighlight = 51
+	// Highlight window when using CTRL+TAB
+	ColNavWindowingHighlight = 52
+	// Darken/colorize entire screen behind the CTRL+TAB window list, when active
+	ColNavWindowingDimBg = 53
+	// Darken/colorize entire screen behind a modal window, when one is active
+	ColModalWindowDimBg = 54
+	ColCOUNT            = 55
+)
+
+// Flags for ColorEdit3() / ColorEdit4() / ColorPicker3() / ColorPicker4() / ColorButton()
+// original name: ImGuiColorEditFlags_
+type ColorEditFlags int32
+
+const (
+	ColorEditFlagsNone = 0
+	//              // ColorEdit, ColorPicker, ColorButton: ignore Alpha component (will only read 3 components from the input pointer).
+	ColorEditFlagsNoAlpha = 2
+	//              // ColorEdit: disable picker when clicking on color square.
+	ColorEditFlagsNoPicker = 4
+	//              // ColorEdit: disable toggling options menu when right-clicking on inputs/small preview.
+	ColorEditFlagsNoOptions = 8
+	//              // ColorEdit, ColorPicker: disable color square preview next to the inputs. (e.g. to show only the inputs)
+	ColorEditFlagsNoSmallPreview = 16
+	//              // ColorEdit, ColorPicker: disable inputs sliders/text widgets (e.g. to show only the small preview color square).
+	ColorEditFlagsNoInputs = 32
+	//              // ColorEdit, ColorPicker, ColorButton: disable tooltip when hovering the preview.
+	ColorEditFlagsNoTooltip = 64
+	//              // ColorEdit, ColorPicker: disable display of inline text label (the label is still forwarded to the tooltip and picker).
+	ColorEditFlagsNoLabel = 128
+	//              // ColorPicker: disable bigger color preview on right side of the picker, use small color square preview instead.
+	ColorEditFlagsNoSidePreview = 256
+	//              // ColorEdit: disable drag and drop target. ColorButton: disable drag and drop source.
+	ColorEditFlagsNoDragDrop = 512
+	//              // ColorButton: disable border (which is enforced by default)
+	ColorEditFlagsNoBorder = 1024
+	//              // ColorEdit, ColorPicker: show vertical alpha bar/gradient in picker.
+	ColorEditFlagsAlphaBar = 65536
+	//              // ColorEdit, ColorPicker, ColorButton: display preview as a transparent color over a checkerboard, instead of opaque.
+	ColorEditFlagsAlphaPreview = 131072
+	//              // ColorEdit, ColorPicker, ColorButton: display half opaque / half checkerboard, instead of opaque.
+	ColorEditFlagsAlphaPreviewHalf = 262144
+	//              // (WIP) ColorEdit: Currently only disable 0.0f..1.0f limits in RGBA edition (note: you probably want to use ImGuiColorEditFlags_Float flag as well).
+	ColorEditFlagsHDR = 524288
+	// [Display]    // ColorEdit: override _display_ type among RGB/HSV/Hex. ColorPicker: select any combination using one or more of RGB/HSV/Hex.
+	ColorEditFlagsDisplayRGB = 1048576
+	// [Display]    // "
+	ColorEditFlagsDisplayHSV = 2097152
+	// [Display]    // "
+	ColorEditFlagsDisplayHex = 4194304
+	// [DataType]   // ColorEdit, ColorPicker, ColorButton: _display_ values formatted as 0..255.
+	ColorEditFlagsUint8 = 8388608
+	// [DataType]   // ColorEdit, ColorPicker, ColorButton: _display_ values formatted as 0.0f..1.0f floats instead of 0..255 integers. No round-trip of value via integers.
+	ColorEditFlagsFloat = 16777216
+	// [Picker]     // ColorPicker: bar for Hue, rectangle for Sat/Value.
+	ColorEditFlagsPickerHueBar = 33554432
+	// [Picker]     // ColorPicker: wheel for Hue, triangle for Sat/Value.
+	ColorEditFlagsPickerHueWheel = 67108864
+	// [Input]      // ColorEdit, ColorPicker: input and output data in RGB format.
+	ColorEditFlagsInputRGB = 134217728
+	// [Input]      // ColorEdit, ColorPicker: input and output data in HSV format.
+	ColorEditFlagsInputHSV       = 268435456
+	ColorEditFlagsDefaultOptions = 177209344
+	ColorEditFlagsDisplayMask    = 7340032
+	ColorEditFlagsDataTypeMask   = 25165824
+	ColorEditFlagsPickerMask     = 100663296
+	ColorEditFlagsInputMask      = 402653184
+)
+
+// Extend ImGuiComboFlags_
+// original name: ImGuiComboFlagsPrivate_
+type ComboFlagsPrivate int32
+
+const (
+	// enable BeginComboPreview()
+	ComboFlagsCustomPreview = 1048576
+)
+
+// Flags for ImGui::BeginCombo()
+// original name: ImGuiComboFlags_
+type ComboFlags int32
+
+const (
+	ComboFlagsNone = 0
+	// Align the popup toward the left by default
+	ComboFlagsPopupAlignLeft = 1
+	// Max ~4 items visible. Tip: If you want your combo popup to be a specific size you can use SetNextWindowSizeConstraints() prior to calling BeginCombo()
+	ComboFlagsHeightSmall = 2
+	// Max ~8 items visible (default)
+	ComboFlagsHeightRegular = 4
+	// Max ~20 items visible
+	ComboFlagsHeightLarge = 8
+	// As many fitting items as possible
+	ComboFlagsHeightLargest = 16
+	// Display on the preview box without the square arrow button
+	ComboFlagsNoArrowButton = 32
+	// Display only a square arrow button
+	ComboFlagsNoPreview = 64
+	// Width dynamically calculated from preview contents
+	ComboFlagsWidthFitPreview = 128
+	ComboFlagsHeightMask      = 30
+)
+
+// Enumeration for ImGui::SetNextWindow***(), SetWindow***(), SetNextItem***() functions
+// Represent a condition.
+// Important: Treat as a regular enum! Do NOT combine multiple values using binary operators! All the functions above treat 0 as a shortcut to ImGuiCond_Always.
+// original name: ImGuiCond_
+type Cond int32
+
+const (
+	// No condition (always set the variable), same as _Always
+	CondNone = 0
+	// No condition (always set the variable), same as _None
+	CondAlways = 1
+	// Set the variable once per runtime session (only the first call will succeed)
+	CondOnce = 2
+	// Set the variable if the object/window has no persistently saved data (no entry in .ini file)
+	CondFirstUseEver = 4
+	// Set the variable if the object/window is appearing after being hidden/inactive (or the first time)
+	CondAppearing = 8
+)
+
+// Configuration flags stored in io.ConfigFlags. Set by user/application.
+// original name: ImGuiConfigFlags_
+type ConfigFlags int32
+
+const (
+	ConfigFlagsNone = 0
+	// Master keyboard navigation enable flag. Enable full Tabbing + directional arrows + space/enter to activate.
+	ConfigFlagsNavEnableKeyboard = 1
+	// Master gamepad navigation enable flag. Backend also needs to set ImGuiBackendFlags_HasGamepad.
+	ConfigFlagsNavEnableGamepad = 2
+	// Instruct navigation to move the mouse cursor. May be useful on TV/console systems where moving a virtual mouse is awkward. Will update io.MousePos and set io.WantSetMousePos=true. If enabled you MUST honor io.WantSetMousePos requests in your backend, otherwise ImGui will react as if the mouse is jumping around back and forth.
+	ConfigFlagsNavEnableSetMousePos = 4
+	// Instruct navigation to not set the io.WantCaptureKeyboard flag when io.NavActive is set.
+	ConfigFlagsNavNoCaptureKeyboard = 8
+	// Instruct imgui to clear mouse position/buttons in NewFrame(). This allows ignoring the mouse information set by the backend.
+	ConfigFlagsNoMouse = 16
+	// Instruct backend to not alter mouse cursor shape and visibility. Use if the backend cursor changes are interfering with yours and you don't want to use SetMouseCursor() to change mouse cursor. You may want to honor requests from imgui by reading GetMouseCursor() yourself instead.
+	ConfigFlagsNoMouseCursorChange = 32
+	// Docking enable flags.
+	ConfigFlagsDockingEnable = 64
+	// Viewport enable flags (require both ImGuiBackendFlags_PlatformHasViewports + ImGuiBackendFlags_RendererHasViewports set by the respective backends)
+	ConfigFlagsViewportsEnable = 1024
+	// [BETA: Don't use] FIXME-DPI: Reposition and resize imgui windows when the DpiScale of a viewport changed (mostly useful for the main viewport hosting other window). Note that resizing the main window itself is up to your application.
+	ConfigFlagsDpiEnableScaleViewports = 16384
+	// [BETA: Don't use] FIXME-DPI: Request bitmap-scaled fonts to match DpiScale. This is a very low-quality workaround. The correct way to handle DPI is _currently_ to replace the atlas and/or fonts in the Platform_OnChangedViewport callback, but this is all early work in progress.
+	ConfigFlagsDpiEnableScaleFonts = 32768
+	// Application is SRGB-aware.
+	ConfigFlagsIsSRGB = 1048576
+	// Application is using a touch screen instead of a mouse.
+	ConfigFlagsIsTouchScreen = 2097152
+)
+
+// original name: ImGuiContextHookType
+type ContextHookType int32
+
+const (
+	ContextHookTypeNewFramePre    = 0
+	ContextHookTypeNewFramePost   = 1
+	ContextHookTypeEndFramePre    = 2
+	ContextHookTypeEndFramePost   = 3
+	ContextHookTypeRenderPre      = 4
+	ContextHookTypeRenderPost     = 5
+	ContextHookTypeShutdown       = 6
+	ContextHookTypePendingRemoval = 7
+)
+
+// Store the source authority (dock node vs window) of a field
+// original name: ImGuiDataAuthority_
+type DataAuthority int32
+
+const (
+	DataAuthorityAuto     = 0
+	DataAuthorityDockNode = 1
+	DataAuthorityWindow   = 2
+)
+
+// Extend ImGuiDataType_
+// original name: ImGuiDataTypePrivate_
+type DataTypePrivate int32
+
+const (
+	DataTypeString  = 11
+	DataTypePointer = 12
+	DataTypeID      = 13
+)
+
+// A primary data type
+// original name: ImGuiDataType_
+type DataType int32
+
+const (
+	// signed char / char (with sensible compilers)
+	DataTypeS8 = 0
+	// unsigned char
+	DataTypeU8 = 1
+	// short
+	DataTypeS16 = 2
+	// unsigned short
+	DataTypeU16 = 3
+	// int
+	DataTypeS32 = 4
+	// unsigned int
+	DataTypeU32 = 5
+	// long long / __int64
+	DataTypeS64 = 6
+	// unsigned long long / unsigned __int64
+	DataTypeU64 = 7
+	// float
+	DataTypeFloat = 8
+	// double
+	DataTypeDouble = 9
+	DataTypeCOUNT  = 10
+)
+
+// original name: ImGuiDebugLogFlags_
+type DebugLogFlags int32
+
+const (
+	DebugLogFlagsNone              = 0
+	DebugLogFlagsEventActiveId     = 1
+	DebugLogFlagsEventFocus        = 2
+	DebugLogFlagsEventPopup        = 4
+	DebugLogFlagsEventNav          = 8
+	DebugLogFlagsEventClipper      = 16
+	DebugLogFlagsEventSelection    = 32
+	DebugLogFlagsEventIO           = 64
+	DebugLogFlagsEventInputRouting = 128
+	DebugLogFlagsEventDocking      = 256
+	DebugLogFlagsEventViewport     = 512
+	DebugLogFlagsEventMask         = 1023
+	// Also send output to TTY
+	DebugLogFlagsOutputToTTY = 1048576
+	// Also send output to Test Engine
+	DebugLogFlagsOutputToTestEngine = 2097152
+)
+
+// A cardinal direction
+// original name: ImGuiDir_
+type Dir int32
+
+const (
+	DirNone  = -1
+	DirLeft  = 0
+	DirRight = 1
+	DirUp    = 2
+	DirDown  = 3
+	DirCOUNT = 4
+)
+
+// Extend ImGuiDockNodeFlags_
+// original name: ImGuiDockNodeFlagsPrivate_
+type DockNodeFlagsPrivate int32
+
+const (
+	// Saved // A dockspace is a node that occupy space within an existing user window. Otherwise the node is floating and create its own window.
+	DockNodeFlagsDockSpace = 1024
+	// Saved // The central node has 2 main properties: stay visible when empty, only use "remaining" spaces from its neighbor.
+	DockNodeFlagsCentralNode = 2048
+	// Saved // Tab bar is completely unavailable. No triangle in the corner to enable it back.
+	DockNodeFlagsNoTabBar = 4096
+	// Saved // Tab bar is hidden, with a triangle in the corner to show it again (NB: actual tab-bar instance may be destroyed as this is only used for single-window tab bar)
+	DockNodeFlagsHiddenTabBar = 8192
+	// Saved // Disable window/docking menu (that one that appears instead of the collapse button)
+	DockNodeFlagsNoWindowMenuButton = 16384
+	// Saved // Disable close button
+	DockNodeFlagsNoCloseButton = 32768
+	//       //
+	DockNodeFlagsNoResizeX = 65536
+	//       //
+	DockNodeFlagsNoResizeY = 131072
+	//       // Any docked window will be automatically be focus-route chained (window->ParentWindowForFocusRoute set to this) so Shortcut() in this window can run when any docked window is focused.
+	DockNodeFlagsDockedWindowsInFocusRoute = 262144
+	//       // Disable this node from splitting other windows/nodes.
+	DockNodeFlagsNoDockingSplitOther = 524288
+	//       // Disable other windows/nodes from being docked over this node.
+	DockNodeFlagsNoDockingOverMe = 1048576
+	//       // Disable this node from being docked over another window or non-empty node.
+	DockNodeFlagsNoDockingOverOther = 2097152
+	//       // Disable this node from being docked over an empty node (e.g. DockSpace with no other windows)
+	DockNodeFlagsNoDockingOverEmpty     = 4194304
+	DockNodeFlagsNoDocking              = 7864336
+	DockNodeFlagsSharedFlagsInheritMask = -1
+	DockNodeFlagsNoResizeFlagsMask      = 196640
+	DockNodeFlagsLocalFlagsTransferMask = 260208
+	DockNodeFlagsSavedFlagsMask         = 261152
+)
+
+// Flags for ImGui::DockSpace(), shared/inherited by child nodes.
+// (Some flags can be applied to individual nodes directly)
+// FIXME-DOCK: Also see ImGuiDockNodeFlagsPrivate_ which may involve using the WIP and internal DockBuilder api.
+// original name: ImGuiDockNodeFlags_
+type DockNodeFlags int32
+
+const (
+	DockNodeFlagsNone = 0
+	//       // Don't display the dockspace node but keep it alive. Windows docked into this dockspace node won't be undocked.
+	DockNodeFlagsKeepAliveOnly = 1
+	//       // Disable docking over the Central Node, which will be always kept empty.
+	DockNodeFlagsNoDockingOverCentralNode = 4
+	//       // Enable passthru dockspace: 1) DockSpace() will render a ImGuiCol_WindowBg background covering everything excepted the Central Node when empty. Meaning the host window should probably use SetNextWindowBgAlpha(0.0f) prior to Begin() when using this. 2) When Central Node is empty: let inputs pass-through + won't display a DockingEmptyBg background. See demo for details.
+	DockNodeFlagsPassthruCentralNode = 8
+	//       // Disable other windows/nodes from splitting this node.
+	DockNodeFlagsNoDockingSplit = 16
+	// Saved // Disable resizing node using the splitter/separators. Useful with programmatically setup dockspaces.
+	DockNodeFlagsNoResize = 32
+	//       // Tab bar will automatically hide when there is a single window in the dock node.
+	DockNodeFlagsAutoHideTabBar = 64
+	//       // Disable undocking this node.
+	DockNodeFlagsNoUndocking = 128
+)
+
+// original name: ImGuiDockNodeState
+type DockNodeState int32
+
+const (
+	DockNodeStateUnknown                                   = 0
+	DockNodeStateHostWindowHiddenBecauseSingleWindow       = 1
+	DockNodeStateHostWindowHiddenBecauseWindowsAreResizing = 2
+	DockNodeStateHostWindowVisible                         = 3
+)
+
+// Flags for ImGui::BeginDragDropSource(), ImGui::AcceptDragDropPayload()
+// original name: ImGuiDragDropFlags_
+type DragDropFlags int32
+
+const (
+	DragDropFlagsNone = 0
+	// Disable preview tooltip. By default, a successful call to BeginDragDropSource opens a tooltip so you can display a preview or description of the source contents. This flag disables this behavior.
+	DragDropFlagsSourceNoPreviewTooltip = 1
+	// By default, when dragging we clear data so that IsItemHovered() will return false, to avoid subsequent user code submitting tooltips. This flag disables this behavior so you can still call IsItemHovered() on the source item.
+	DragDropFlagsSourceNoDisableHover = 2
+	// Disable the behavior that allows to open tree nodes and collapsing header by holding over them while dragging a source item.
+	DragDropFlagsSourceNoHoldToOpenOthers = 4
+	// Allow items such as Text(), Image() that have no unique identifier to be used as drag source, by manufacturing a temporary identifier based on their window-relative position. This is extremely unusual within the dear imgui ecosystem and so we made it explicit.
+	DragDropFlagsSourceAllowNullID = 8
+	// External source (from outside of dear imgui), won't attempt to read current item/window info. Will always return true. Only one Extern source can be active simultaneously.
+	DragDropFlagsSourceExtern = 16
+	// Automatically expire the payload if the source cease to be submitted (otherwise payloads are persisting while being dragged)
+	DragDropFlagsSourceAutoExpirePayload = 32
+	// AcceptDragDropPayload() will returns true even before the mouse button is released. You can then call IsDelivery() to test if the payload needs to be delivered.
+	DragDropFlagsAcceptBeforeDelivery = 1024
+	// Do not draw the default highlight rectangle when hovering over target.
+	DragDropFlagsAcceptNoDrawDefaultRect = 2048
+	// Request hiding the BeginDragDropSource tooltip from the BeginDragDropTarget site.
+	DragDropFlagsAcceptNoPreviewTooltip = 4096
+	// For peeking ahead and inspecting the payload before delivery.
+	DragDropFlagsAcceptPeekOnly = 3072
+)
+
+// Flags for FocusWindow(). This is not called ImGuiFocusFlags to avoid confusion with public-facing ImGuiFocusedFlags.
+// FIXME: Once we finishing replacing more uses of GetTopMostPopupModal()+IsWindowWithinBeginStackOf()
+// and FindBlockingModal() with this, we may want to change the flag to be opt-out instead of opt-in.
+// original name: ImGuiFocusRequestFlags_
+type FocusRequestFlags int32
+
+const (
+	FocusRequestFlagsNone = 0
+	// Find last focused child (if any) and focus it instead.
+	FocusRequestFlagsRestoreFocusedChild = 1
+	// Do not set focus if the window is below a modal.
+	FocusRequestFlagsUnlessBelowModal = 2
+)
+
+// Flags for ImGui::IsWindowFocused()
+// original name: ImGuiFocusedFlags_
+type FocusedFlags int32
+
+const (
+	FocusedFlagsNone = 0
+	// Return true if any children of the window is focused
+	FocusedFlagsChildWindows = 1
+	// Test from root window (top most parent of the current hierarchy)
+	FocusedFlagsRootWindow = 2
+	// Return true if any window is focused. Important: If you are trying to tell how to dispatch your low-level inputs, do NOT use this. Use 'io.WantCaptureMouse' instead! Please read the FAQ!
+	FocusedFlagsAnyWindow = 4
+	// Do not consider popup hierarchy (do not treat popup emitter as parent of popup) (when used with _ChildWindows or _RootWindow)
+	FocusedFlagsNoPopupHierarchy = 8
+	// Consider docking hierarchy (treat dockspace host as parent of docked window) (when used with _ChildWindows or _RootWindow)
+	FocusedFlagsDockHierarchy       = 16
+	FocusedFlagsRootAndChildWindows = 3
+)
+
+// Extend ImGuiHoveredFlags_
+// original name: ImGuiHoveredFlagsPrivate_
+type HoveredFlagsPrivate int32
+
+const (
+	HoveredFlagsDelayMask                     = 245760
+	HoveredFlagsAllowedMaskForIsWindowHovered = 12479
+	HoveredFlagsAllowedMaskForIsItemHovered   = 262048
+)
+
+// Flags for ImGui::IsItemHovered(), ImGui::IsWindowHovered()
+// Note: if you are trying to check whether your mouse should be dispatched to Dear ImGui or to your app, you should use 'io.WantCaptureMouse' instead! Please read the FAQ!
+// Note: windows with the ImGuiWindowFlags_NoInputs flag are ignored by IsWindowHovered() calls.
+// original name: ImGuiHoveredFlags_
+type HoveredFlags int32
+
+const (
+	// Return true if directly over the item/window, not obstructed by another window, not obstructed by an active popup or modal blocking inputs under them.
+	HoveredFlagsNone = 0
+	// IsWindowHovered() only: Return true if any children of the window is hovered
+	HoveredFlagsChildWindows = 1
+	// IsWindowHovered() only: Test from root window (top most parent of the current hierarchy)
+	HoveredFlagsRootWindow = 2
+	// IsWindowHovered() only: Return true if any window is hovered
+	HoveredFlagsAnyWindow = 4
+	// IsWindowHovered() only: Do not consider popup hierarchy (do not treat popup emitter as parent of popup) (when used with _ChildWindows or _RootWindow)
+	HoveredFlagsNoPopupHierarchy = 8
+	// IsWindowHovered() only: Consider docking hierarchy (treat dockspace host as parent of docked window) (when used with _ChildWindows or _RootWindow)
+	HoveredFlagsDockHierarchy = 16
+	// Return true even if a popup window is normally blocking access to this item/window
+	HoveredFlagsAllowWhenBlockedByPopup = 32
+	// Return true even if an active item is blocking access to this item/window. Useful for Drag and Drop patterns.
+	HoveredFlagsAllowWhenBlockedByActiveItem = 128
+	// IsItemHovered() only: Return true even if the item uses AllowOverlap mode and is overlapped by another hoverable item.
+	HoveredFlagsAllowWhenOverlappedByItem = 256
+	// IsItemHovered() only: Return true even if the position is obstructed or overlapped by another window.
+	HoveredFlagsAllowWhenOverlappedByWindow = 512
+	// IsItemHovered() only: Return true even if the item is disabled
+	HoveredFlagsAllowWhenDisabled = 1024
+	// IsItemHovered() only: Disable using gamepad/keyboard navigation state when active, always query mouse
+	HoveredFlagsNoNavOverride       = 2048
+	HoveredFlagsAllowWhenOverlapped = 768
+	HoveredFlagsRectOnly            = 928
+	HoveredFlagsRootAndChildWindows = 3
+	// Shortcut for standard flags when using IsItemHovered() + SetTooltip() sequence.
+	HoveredFlagsForTooltip = 4096
+	// Require mouse to be stationary for style.HoverStationaryDelay (~0.15 sec) _at least one time_. After this, can move on same item/window. Using the stationary test tends to reduces the need for a long delay.
+	HoveredFlagsStationary = 8192
+	// IsItemHovered() only: Return true immediately (default). As this is the default you generally ignore this.
+	HoveredFlagsDelayNone = 16384
+	// IsItemHovered() only: Return true after style.HoverDelayShort elapsed (~0.15 sec) (shared between items) + requires mouse to be stationary for style.HoverStationaryDelay (once per item).
+	HoveredFlagsDelayShort = 32768
+	// IsItemHovered() only: Return true after style.HoverDelayNormal elapsed (~0.40 sec) (shared between items) + requires mouse to be stationary for style.HoverStationaryDelay (once per item).
+	HoveredFlagsDelayNormal = 65536
+	// IsItemHovered() only: Disable shared delay system where moving from one item to the next keeps the previous timer for a short time (standard for tooltips with long delays)
+	HoveredFlagsNoSharedDelay = 131072
+)
+
+// [Internal] Key ranges
+// [Internal] Named shortcuts for Navigation
+// original name: ImGuiInputEventType
+type InputEventType int32
+
+const (
+	InputEventTypeNone          = 0
+	InputEventTypeMousePos      = 1
+	InputEventTypeMouseWheel    = 2
+	InputEventTypeMouseButton   = 3
+	InputEventTypeMouseViewport = 4
+	InputEventTypeKey           = 5
+	InputEventTypeText          = 6
+	InputEventTypeFocus         = 7
+	InputEventTypeCOUNT         = 8
+)
+
+// Flags for extended versions of IsKeyPressed(), IsMouseClicked(), Shortcut(), SetKeyOwner(), SetItemKeyOwner()
+// Don't mistake with ImGuiInputTextFlags! (which is for ImGui::InputText() function)
+// original name: ImGuiInputFlags_
+type InputFlags int32
+
+const (
+	InputFlagsNone = 0
+	// Enable repeat. Return true on successive repeats. Default for legacy IsKeyPressed(). NOT Default for legacy IsMouseClicked(). MUST BE == 1.
+	InputFlagsRepeat = 1
+	// Repeat rate: Regular (default)
+	InputFlagsRepeatRateDefault = 2
+	// Repeat rate: Fast
+	InputFlagsRepeatRateNavMove = 4
+	// Repeat rate: Faster
+	InputFlagsRepeatRateNavTweak = 8
+	// Stop repeating when released (default for all functions except Shortcut). This only exists to allow overriding Shortcut() default behavior.
+	InputFlagsRepeatUntilRelease = 16
+	// Stop repeating when released OR if keyboard mods are changed (default for Shortcut)
+	InputFlagsRepeatUntilKeyModsChange = 32
+	// Stop repeating when released OR if keyboard mods are leaving the None state. Allows going from Mod+Key to Key by releasing Mod.
+	InputFlagsRepeatUntilKeyModsChangeFromNone = 64
+	// Stop repeating when released OR if any other keyboard key is pressed during the repeat
+	InputFlagsRepeatUntilOtherKeyPress = 128
+	// Only set if item is hovered (default to both)
+	InputFlagsCondHovered = 256
+	// Only set if item is active (default to both)
+	InputFlagsCondActive  = 512
+	InputFlagsCondDefault = 768
+	// Further accesses to key data will require EXPLICIT owner ID (ImGuiKeyOwner_Any/0 will NOT accepted for polling). Cleared at end of frame.
+	InputFlagsLockThisFrame = 1024
+	// Further accesses to key data will require EXPLICIT owner ID (ImGuiKeyOwner_Any/0 will NOT accepted for polling). Cleared when the key is released or at end of each frame if key is released.
+	InputFlagsLockUntilRelease = 2048
+	// (Default) Honor focus route: Accept inputs if window is in focus stack. Deep-most focused window takes inputs. ActiveId takes inputs over deep-most focused window.
+	InputFlagsRouteFocused = 4096
+	// Register route globally (lowest priority: unless a focused window or active item registered the route) -> recommended Global priority IF you need a Global priority.
+	InputFlagsRouteGlobalLow = 8192
+	// Register route globally (medium priority: unless an active item registered the route, e.g. CTRL+A registered by InputText will take priority over this).
+	InputFlagsRouteGlobal = 16384
+	// Register route globally (higher priority: unlikely you need to use that: will interfere with every active items, e.g. CTRL+A registered by InputText will be overriden by this)
+	InputFlagsRouteGlobalHigh = 32768
+	// Do not register route, poll keys directly.
+	InputFlagsRouteAlways = 65536
+	// Global routes will not be applied if underlying background/void is focused (== no Dear ImGui windows are focused). Useful for overlay applications.
+	InputFlagsRouteUnlessBgFocused = 131072
+	InputFlagsRepeatRateMask       = 14
+	InputFlagsRepeatUntilMask      = 240
+	InputFlagsRepeatMask           = 255
+	InputFlagsCondMask             = 768
+	// _Always not part of this!
+	InputFlagsRouteMask                  = 61440
+	InputFlagsSupportedByIsKeyPressed    = 255
+	InputFlagsSupportedByIsMouseClicked  = 1
+	InputFlagsSupportedByShortcut        = 258303
+	InputFlagsSupportedBySetKeyOwner     = 3072
+	InputFlagsSupportedBySetItemKeyOwner = 3840
+)
+
+// original name: ImGuiInputSource
+type InputSource int32
+
+const (
+	InputSourceNone = 0
+	// Note: may be Mouse or TouchScreen or Pen. See io.MouseSource to distinguish them.
+	InputSourceMouse    = 1
+	InputSourceKeyboard = 2
+	InputSourceGamepad  = 3
+	// Currently only used by InputText()
+	InputSourceClipboard = 4
+	InputSourceCOUNT     = 5
+)
+
+// Extend ImGuiInputTextFlags_
+// original name: ImGuiInputTextFlagsPrivate_
+type InputTextFlagsPrivate int32
+
+const (
+	// For internal use by InputTextMultiline()
+	InputTextFlagsMultiline = 67108864
+	// For internal use by functions using InputText() before reformatting data
+	InputTextFlagsNoMarkEdited = 134217728
+	// For internal use by TempInputText(), will skip calling ItemAdd(). Require bounding-box to strictly match.
+	InputTextFlagsMergedItem = 268435456
+)
+
+// Flags for ImGui::InputText()
+// (Those are per-item flags. There are shared flags in ImGuiIO: io.ConfigInputTextCursorBlink and io.ConfigInputTextEnterKeepActive)
+// original name: ImGuiInputTextFlags_
+type InputTextFlags int32
+
+const (
+	InputTextFlagsNone = 0
+	// Allow 0123456789.+-*/
+	InputTextFlagsCharsDecimal = 1
+	// Allow 0123456789ABCDEFabcdef
+	InputTextFlagsCharsHexadecimal = 2
+	// Turn a..z into A..Z
+	InputTextFlagsCharsUppercase = 4
+	// Filter out spaces, tabs
+	InputTextFlagsCharsNoBlank = 8
+	// Select entire text when first taking mouse focus
+	InputTextFlagsAutoSelectAll = 16
+	// Return 'true' when Enter is pressed (as opposed to every time the value was modified). Consider looking at the IsItemDeactivatedAfterEdit() function.
+	InputTextFlagsEnterReturnsTrue = 32
+	// Callback on pressing TAB (for completion handling)
+	InputTextFlagsCallbackCompletion = 64
+	// Callback on pressing Up/Down arrows (for history handling)
+	InputTextFlagsCallbackHistory = 128
+	// Callback on each iteration. User code may query cursor position, modify text buffer.
+	InputTextFlagsCallbackAlways = 256
+	// Callback on character inputs to replace or discard them. Modify 'EventChar' to replace or discard, or return 1 in callback to discard.
+	InputTextFlagsCallbackCharFilter = 512
+	// Pressing TAB input a '\t' character into the text field
+	InputTextFlagsAllowTabInput = 1024
+	// In multi-line mode, unfocus with Enter, add new line with Ctrl+Enter (default is opposite: unfocus with Ctrl+Enter, add line with Enter).
+	InputTextFlagsCtrlEnterForNewLine = 2048
+	// Disable following the cursor horizontally
+	InputTextFlagsNoHorizontalScroll = 4096
+	// Overwrite mode
+	InputTextFlagsAlwaysOverwrite = 8192
+	// Read-only mode
+	InputTextFlagsReadOnly = 16384
+	// Password mode, display all characters as '*'
+	InputTextFlagsPassword = 32768
+	// Disable undo/redo. Note that input text owns the text data while active, if you want to provide your own undo/redo stack you need e.g. to call ClearActiveID().
+	InputTextFlagsNoUndoRedo = 65536
+	// Allow 0123456789.+-*/eE (Scientific notation input)
+	InputTextFlagsCharsScientific = 131072
+	// Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow. Notify when the string wants to be resized (for string types which hold a cache of their Size). You will be provided a new BufSize in the callback and NEED to honor it. (see misc/cpp/imgui_stdlib.h for an example of using this)
+	InputTextFlagsCallbackResize = 262144
+	// Callback on any edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
+	InputTextFlagsCallbackEdit = 524288
+	// Escape key clears content if not empty, and deactivate otherwise (contrast to default behavior of Escape to revert)
+	InputTextFlagsEscapeClearsAll = 1048576
+)
+
+// Flags used by upcoming items
+// - input: PushItemFlag() manipulates g.CurrentItemFlags, ItemAdd() calls may add extra flags.
+// - output: stored in g.LastItemData.InFlags
+// Current window shared by all windows.
+// This is going to be exposed in imgui.h when stabilized enough.
+// original name: ImGuiItemFlags_
+type ItemFlags int32
+
+const (
+	ItemFlagsNone = 0
+	// false     // Disable keyboard tabbing. This is a "lighter" version of ImGuiItemFlags_NoNav.
+	ItemFlagsNoTabStop = 1
+	// false     // Button() will return true multiple times based on io.KeyRepeatDelay and io.KeyRepeatRate settings.
+	ItemFlagsButtonRepeat = 2
+	// false     // Disable interactions but doesn't affect visuals. See BeginDisabled()/EndDisabled(). See github.com/ocornut/imgui/issues/211
+	ItemFlagsDisabled = 4
+	// false     // Disable any form of focusing (keyboard/gamepad directional navigation and SetKeyboardFocusHere() calls)
+	ItemFlagsNoNav = 8
+	// false     // Disable item being a candidate for default focus (e.g. used by title bar items)
+	ItemFlagsNoNavDefaultFocus = 16
+	// false     // Disable MenuItem/Selectable() automatically closing their popup window
+	ItemFlagsSelectableDontClosePopup = 32
+	// false     // [BETA] Represent a mixed/indeterminate value, generally multi-selection where values differ. Currently only supported by Checkbox() (later should support all sorts of widgets)
+	ItemFlagsMixedValue = 64
+	// false     // [ALPHA] Allow hovering interactions but underlying value is not changed.
+	ItemFlagsReadOnly = 128
+	// false     // Disable hoverable check in ItemHoverable()
+	ItemFlagsNoWindowHoverableCheck = 256
+	// false     // Allow being overlapped by another widget. Not-hovered to Hovered transition deferred by a frame.
+	ItemFlagsAllowOverlap = 512
+	// false     // [WIP] Auto-activate input mode when tab focused. Currently only used and supported by a few items before it becomes a generic feature.
+	ItemFlagsInputable = 1024
+	// false     // Set by SetNextItemSelectionUserData()
+	ItemFlagsHasSelectionUserData = 2048
+)
+
+// Status flags for an already submitted item
+// - output: stored in g.LastItemData.StatusFlags
+// original name: ImGuiItemStatusFlags_
+type ItemStatusFlags int32
+
+const (
+	ItemStatusFlagsNone = 0
+	// Mouse position is within item rectangle (does NOT mean that the window is in correct z-order and can be hovered!, this is only one part of the most-common IsItemHovered test)
+	ItemStatusFlagsHoveredRect = 1
+	// g.LastItemData.DisplayRect is valid
+	ItemStatusFlagsHasDisplayRect = 2
+	// Value exposed by item was edited in the current frame (should match the bool return value of most widgets)
+	ItemStatusFlagsEdited = 4
+	// Set when Selectable(), TreeNode() reports toggling a selection. We can't report "Selected", only state changes, in order to easily handle clipping with less issues.
+	ItemStatusFlagsToggledSelection = 8
+	// Set when TreeNode() reports toggling their open state.
+	ItemStatusFlagsToggledOpen = 16
+	// Set if the widget/group is able to provide data for the ImGuiItemStatusFlags_Deactivated flag.
+	ItemStatusFlagsHasDeactivated = 32
+	// Only valid if ImGuiItemStatusFlags_HasDeactivated is set.
+	ItemStatusFlagsDeactivated = 64
+	// Override the HoveredWindow test to allow cross-window hover testing.
+	ItemStatusFlagsHoveredWindow = 128
+	// [WIP] Set when item is overlapping the current clipping rectangle (Used internally. Please don't use yet: API/system will change as we refactor Itemadd()).
+	ItemStatusFlagsVisible = 256
+	// g.LastItemData.ClipRect is valid
+	ItemStatusFlagsHasClipRect = 512
+)
+
+// A key identifier (ImGuiKey_XXX or ImGuiMod_XXX value): can represent Keyboard, Mouse and Gamepad values.
+// All our named keys are >= 512. Keys value 0 to 511 are left unused as legacy native/opaque key values (< 1.87).
+// Since >= 1.89 we increased typing (went from int to enum), some legacy code may need a cast to ImGuiKey.
+// Read details about the 1.87 and 1.89 transition : https://github.com/ocornut/imgui/issues/4921
+// Note that "Keys" related to physical keys and are not the same concept as input "Characters", the later are submitted via io.AddInputCharacter().
+// The keyboard key enum values are named after the keys on a standard US keyboard, and on other keyboard types the keys reported may not match the keycaps.
+// original name: ImGuiKey
+type Key int32
+
+const (
+	KeyNone = 0
+	// == ImGuiKey_NamedKey_BEGIN
+	KeyTab        = 512
+	KeyLeftArrow  = 513
+	KeyRightArrow = 514
+	KeyUpArrow    = 515
+	KeyDownArrow  = 516
+	KeyPageUp     = 517
+	KeyPageDown   = 518
+	KeyHome       = 519
+	KeyEnd        = 520
+	KeyInsert     = 521
+	KeyDelete     = 522
+	KeyBackspace  = 523
+	KeySpace      = 524
+	KeyEnter      = 525
+	KeyEscape     = 526
+	KeyLeftCtrl   = 527
+	KeyLeftShift  = 528
+	KeyLeftAlt    = 529
+	KeyLeftSuper  = 530
+	KeyRightCtrl  = 531
+	KeyRightShift = 532
+	KeyRightAlt   = 533
+	KeyRightSuper = 534
+	KeyMenu       = 535
+	Key0          = 536
+	Key1          = 537
+	Key2          = 538
+	Key3          = 539
+	Key4          = 540
+	Key5          = 541
+	Key6          = 542
+	Key7          = 543
+	Key8          = 544
+	Key9          = 545
+	KeyA          = 546
+	KeyB          = 547
+	KeyC          = 548
+	KeyD          = 549
+	KeyE          = 550
+	KeyF          = 551
+	KeyG          = 552
+	KeyH          = 553
+	KeyI          = 554
+	KeyJ          = 555
+	KeyK          = 556
+	KeyL          = 557
+	KeyM          = 558
+	KeyN          = 559
+	KeyO          = 560
+	KeyP          = 561
+	KeyQ          = 562
+	KeyR          = 563
+	KeyS          = 564
+	KeyT          = 565
+	KeyU          = 566
+	KeyV          = 567
+	KeyW          = 568
+	KeyX          = 569
+	KeyY          = 570
+	KeyZ          = 571
+	KeyF1         = 572
+	KeyF2         = 573
+	KeyF3         = 574
+	KeyF4         = 575
+	KeyF5         = 576
+	KeyF6         = 577
+	KeyF7         = 578
+	KeyF8         = 579
+	KeyF9         = 580
+	KeyF10        = 581
+	KeyF11        = 582
+	KeyF12        = 583
+	KeyF13        = 584
+	KeyF14        = 585
+	KeyF15        = 586
+	KeyF16        = 587
+	KeyF17        = 588
+	KeyF18        = 589
+	KeyF19        = 590
+	KeyF20        = 591
+	KeyF21        = 592
+	KeyF22        = 593
+	KeyF23        = 594
+	KeyF24        = 595
+	// '
+	KeyApostrophe = 596
+	// ,
+	KeyComma = 597
+	// -
+	KeyMinus = 598
+	// .
+	KeyPeriod = 599
+	// /
+	KeySlash = 600
+	// ;
+	KeySemicolon = 601
+	// =
+	KeyEqual = 602
+	// [
+	KeyLeftBracket = 603
+	// \ (this text inhibit multiline comment caused by backslash)
+	KeyBackslash = 604
+	// ]
+	KeyRightBracket = 605
+	// `
+	KeyGraveAccent    = 606
+	KeyCapsLock       = 607
+	KeyScrollLock     = 608
+	KeyNumLock        = 609
+	KeyPrintScreen    = 610
+	KeyPause          = 611
+	KeyKeypad0        = 612
+	KeyKeypad1        = 613
+	KeyKeypad2        = 614
+	KeyKeypad3        = 615
+	KeyKeypad4        = 616
+	KeyKeypad5        = 617
+	KeyKeypad6        = 618
+	KeyKeypad7        = 619
+	KeyKeypad8        = 620
+	KeyKeypad9        = 621
+	KeyKeypadDecimal  = 622
+	KeyKeypadDivide   = 623
+	KeyKeypadMultiply = 624
+	KeyKeypadSubtract = 625
+	KeyKeypadAdd      = 626
+	KeyKeypadEnter    = 627
+	KeyKeypadEqual    = 628
+	// Available on some keyboard/mouses. Often referred as "Browser Back"
+	KeyAppBack    = 629
+	KeyAppForward = 630
+	// Menu (Xbox)      + (Switch)   Start/Options (PS)
+	KeyGamepadStart = 631
+	// View (Xbox)      - (Switch)   Share (PS)
+	KeyGamepadBack = 632
+	// X (Xbox)         Y (Switch)   Square (PS)        // Tap: Toggle Menu. Hold: Windowing mode (Focus/Move/Resize windows)
+	KeyGamepadFaceLeft = 633
+	// B (Xbox)         A (Switch)   Circle (PS)        // Cancel / Close / Exit
+	KeyGamepadFaceRight = 634
+	// Y (Xbox)         X (Switch)   Triangle (PS)      // Text Input / On-screen Keyboard
+	KeyGamepadFaceUp = 635
+	// A (Xbox)         B (Switch)   Cross (PS)         // Activate / Open / Toggle / Tweak
+	KeyGamepadFaceDown = 636
+	// D-pad Left                                       // Move / Tweak / Resize Window (in Windowing mode)
+	KeyGamepadDpadLeft = 637
+	// D-pad Right                                      // Move / Tweak / Resize Window (in Windowing mode)
+	KeyGamepadDpadRight = 638
+	// D-pad Up                                         // Move / Tweak / Resize Window (in Windowing mode)
+	KeyGamepadDpadUp = 639
+	// D-pad Down                                       // Move / Tweak / Resize Window (in Windowing mode)
+	KeyGamepadDpadDown = 640
+	// L Bumper (Xbox)  L (Switch)   L1 (PS)            // Tweak Slower / Focus Previous (in Windowing mode)
+	KeyGamepadL1 = 641
+	// R Bumper (Xbox)  R (Switch)   R1 (PS)            // Tweak Faster / Focus Next (in Windowing mode)
+	KeyGamepadR1 = 642
+	// L Trig. (Xbox)   ZL (Switch)  L2 (PS) [Analog]
+	KeyGamepadL2 = 643
+	// R Trig. (Xbox)   ZR (Switch)  R2 (PS) [Analog]
+	KeyGamepadR2 = 644
+	// L Stick (Xbox)   L3 (Switch)  L3 (PS)
+	KeyGamepadL3 = 645
+	// R Stick (Xbox)   R3 (Switch)  R3 (PS)
+	KeyGamepadR3 = 646
+	// [Analog]                                         // Move Window (in Windowing mode)
+	KeyGamepadLStickLeft = 647
+	// [Analog]                                         // Move Window (in Windowing mode)
+	KeyGamepadLStickRight = 648
+	// [Analog]                                         // Move Window (in Windowing mode)
+	KeyGamepadLStickUp = 649
+	// [Analog]                                         // Move Window (in Windowing mode)
+	KeyGamepadLStickDown = 650
+	// [Analog]
+	KeyGamepadRStickLeft = 651
+	// [Analog]
+	KeyGamepadRStickRight = 652
+	// [Analog]
+	KeyGamepadRStickUp = 653
+	// [Analog]
+	KeyGamepadRStickDown   = 654
+	KeyMouseLeft           = 655
+	KeyMouseRight          = 656
+	KeyMouseMiddle         = 657
+	KeyMouseX1             = 658
+	KeyMouseX2             = 659
+	KeyMouseWheelX         = 660
+	KeyMouseWheelY         = 661
+	KeyReservedForModCtrl  = 662
+	KeyReservedForModShift = 663
+	KeyReservedForModAlt   = 664
+	KeyReservedForModSuper = 665
+	KeyCOUNT               = 666
+	ModNone                = 0
+	// Ctrl
+	ModCtrl = 4096
+	// Shift
+	ModShift = 8192
+	// Option/Menu
+	ModAlt = 16384
+	// Cmd/Super/Windows
+	ModSuper = 32768
+	// Alias for Ctrl (non-macOS) _or_ Super (macOS).
+	ModShortcut = 2048
+	// 5-bits
+	ModMask          = 63488
+	KeyNamedKeyBEGIN = 512
+	KeyNamedKeyEND   = 666
+	KeyNamedKeyCOUNT = 154
+	// Size of KeysData[]: only hold named keys
+	KeyKeysDataSIZE = 154
+	// Accesses to io.KeysData[] must use (key - ImGuiKey_KeysData_OFFSET) index.
+	KeyKeysDataOFFSET = 512
+)
+
+// FIXME: this is in development, not exposed/functional as a generic feature yet.
+// Horizontal/Vertical enums are fixed to 0/1 so they may be used to index ImVec2
+// original name: ImGuiLayoutType_
+type LayoutType int32
+
+const (
+	LayoutTypeHorizontal = 0
+	LayoutTypeVertical   = 1
+)
+
+// This is experimental and not officially supported, it'll probably fall short of features, if/when it does we may backtrack.
+// original name: ImGuiLocKey
+type LocKey int32
+
+const (
+	LocKeyVersionStr                    = 0
+	LocKeyTableSizeOne                  = 1
+	LocKeyTableSizeAllFit               = 2
+	LocKeyTableSizeAllDefault           = 3
+	LocKeyTableResetOrder               = 4
+	LocKeyWindowingMainMenuBar          = 5
+	LocKeyWindowingPopup                = 6
+	LocKeyWindowingUntitled             = 7
+	LocKeyDockingHideTabBar             = 8
+	LocKeyDockingHoldShiftToDock        = 9
+	LocKeyDockingDragToUndockOrMoveNode = 10
+	LocKeyCOUNT                         = 11
+)
+
+// original name: ImGuiLogType
+type LogType int32
+
+const (
+	LogTypeNone      = 0
+	LogTypeTTY       = 1
+	LogTypeFile      = 2
+	LogTypeBuffer    = 3
+	LogTypeClipboard = 4
+)
+
+// Identify a mouse button.
+// Those values are guaranteed to be stable and we frequently use 0/1 directly. Named enums provided for convenience.
+// original name: ImGuiMouseButton_
+type MouseButton int32
+
+const (
+	MouseButtonLeft   = 0
+	MouseButtonRight  = 1
+	MouseButtonMiddle = 2
+	MouseButtonCOUNT  = 5
+)
+
+// Enumeration for GetMouseCursor()
+// User code may request backend to display given cursor by calling SetMouseCursor(), which is why we have some cursors that are marked unused here
+// original name: ImGuiMouseCursor_
+type MouseCursor int32
+
+const (
+	MouseCursorNone  = -1
+	MouseCursorArrow = 0
+	// When hovering over InputText, etc.
+	MouseCursorTextInput = 1
+	// (Unused by Dear ImGui functions)
+	MouseCursorResizeAll = 2
+	// When hovering over a horizontal border
+	MouseCursorResizeNS = 3
+	// When hovering over a vertical border or a column
+	MouseCursorResizeEW = 4
+	// When hovering over the bottom-left corner of a window
+	MouseCursorResizeNESW = 5
+	// When hovering over the bottom-right corner of a window
+	MouseCursorResizeNWSE = 6
+	// (Unused by Dear ImGui functions. Use for e.g. hyperlinks)
+	MouseCursorHand = 7
+	// When hovering something with disallowed interaction. Usually a crossed circle.
+	MouseCursorNotAllowed = 8
+	MouseCursorCOUNT      = 9
+)
+
+// Enumeration for AddMouseSourceEvent() actual source of Mouse Input data.
+// Historically we use "Mouse" terminology everywhere to indicate pointer data, e.g. MousePos, IsMousePressed(), io.AddMousePosEvent()
+// But that "Mouse" data can come from different source which occasionally may be useful for application to know about.
+// You can submit a change of pointer type using io.AddMouseSourceEvent().
+// original name: ImGuiMouseSource
+type MouseSource int32
+
+const (
+	// Input is coming from an actual mouse.
+	MouseSourceMouse = 0
+	// Input is coming from a touch screen (no hovering prior to initial press, less precise initial press aiming, dual-axis wheeling possible).
+	MouseSourceTouchScreen = 1
+	// Input is coming from a pressure/magnetic pen (often used in conjunction with high-sampling rates).
+	MouseSourcePen   = 2
+	MouseSourceCOUNT = 3
+)
+
+// original name: ImGuiNavHighlightFlags_
+type NavHighlightFlags int32
+
+const (
+	NavHighlightFlagsNone = 0
+	// Compact highlight, no padding
+	NavHighlightFlagsCompact = 2
+	// Draw rectangular highlight if (g.NavId == id) _even_ when using the mouse.
+	NavHighlightFlagsAlwaysDraw = 4
+	NavHighlightFlagsNoRounding = 8
+)
+
+// original name: ImGuiNavLayer
+type NavLayer int32
+
+const (
+	// Main scrolling layer
+	NavLayerMain = 0
+	// Menu layer (access with Alt)
+	NavLayerMenu  = 1
+	NavLayerCOUNT = 2
+)
+
+// original name: ImGuiNavMoveFlags_
+type NavMoveFlags int32
+
+const (
+	NavMoveFlagsNone = 0
+	// On failed request, restart from opposite side
+	NavMoveFlagsLoopX = 1
+	NavMoveFlagsLoopY = 2
+	// On failed request, request from opposite side one line down (when NavDir==right) or one line up (when NavDir==left)
+	NavMoveFlagsWrapX = 4
+	// This is not super useful but provided for completeness
+	NavMoveFlagsWrapY    = 8
+	NavMoveFlagsWrapMask = 15
+	// Allow scoring and considering the current NavId as a move target candidate. This is used when the move source is offset (e.g. pressing PageDown actually needs to send a Up move request, if we are pressing PageDown from the bottom-most item we need to stay in place)
+	NavMoveFlagsAllowCurrentNavId = 16
+	// Store alternate result in NavMoveResultLocalVisible that only comprise elements that are already fully visible (used by PageUp/PageDown)
+	NavMoveFlagsAlsoScoreVisibleSet = 32
+	// Force scrolling to min/max (used by Home/End) // FIXME-NAV: Aim to remove or reword, probably unnecessary
+	NavMoveFlagsScrollToEdgeY = 64
+	NavMoveFlagsForwarded     = 128
+	// Dummy scoring for debug purpose, don't apply result
+	NavMoveFlagsDebugNoResult = 256
+	// Requests from focus API can land/focus/activate items even if they are marked with _NoTabStop (see NavProcessItemForTabbingRequest() for details)
+	NavMoveFlagsFocusApi = 512
+	// == Focus + Activate if item is Inputable + DontChangeNavHighlight
+	NavMoveFlagsIsTabbing = 1024
+	// Identify a PageDown/PageUp request.
+	NavMoveFlagsIsPageMove = 2048
+	// Activate/select target item.
+	NavMoveFlagsActivate = 4096
+	// Don't trigger selection by not setting g.NavJustMovedTo
+	NavMoveFlagsNoSelect = 8192
+	// Do not alter the visible state of keyboard vs mouse nav highlight
+	NavMoveFlagsNoSetNavHighlight = 16384
+)
+
+// original name: ImGuiNextItemDataFlags_
+type NextItemDataFlags int32
+
+const (
+	NextItemDataFlagsNone        = 0
+	NextItemDataFlagsHasWidth    = 1
+	NextItemDataFlagsHasOpen     = 2
+	NextItemDataFlagsHasShortcut = 4
+)
+
+// original name: ImGuiNextWindowDataFlags_
+type NextWindowDataFlags int32
+
+const (
+	NextWindowDataFlagsNone              = 0
+	NextWindowDataFlagsHasPos            = 1
+	NextWindowDataFlagsHasSize           = 2
+	NextWindowDataFlagsHasContentSize    = 4
+	NextWindowDataFlagsHasCollapsed      = 8
+	NextWindowDataFlagsHasSizeConstraint = 16
+	NextWindowDataFlagsHasFocus          = 32
+	NextWindowDataFlagsHasBgAlpha        = 64
+	NextWindowDataFlagsHasScroll         = 128
+	NextWindowDataFlagsHasChildFlags     = 256
+	NextWindowDataFlagsHasViewport       = 512
+	NextWindowDataFlagsHasDock           = 1024
+	NextWindowDataFlagsHasWindowClass    = 2048
+)
+
+// Flags for internal's BeginColumns(). This is an obsolete API. Prefer using BeginTable() nowadays!
+// original name: ImGuiOldColumnFlags_
+type OldColumnFlags int32
+
+const (
+	OldColumnFlagsNone = 0
+	// Disable column dividers
+	OldColumnFlagsNoBorder = 1
+	// Disable resizing columns when clicking on the dividers
+	OldColumnFlagsNoResize = 2
+	// Disable column width preservation when adjusting columns
+	OldColumnFlagsNoPreserveWidths = 4
+	// Disable forcing columns to fit within window
+	OldColumnFlagsNoForceWithinWindow = 8
+	// Restore pre-1.51 behavior of extending the parent window contents size but _without affecting the columns width at all_. Will eventually remove.
+	OldColumnFlagsGrowParentContentsSize = 16
+)
+
+// original name: ImGuiPlotType
+type PlotType int32
+
+const (
+	PlotTypeLines     = 0
+	PlotTypeHistogram = 1
+)
+
+// Flags for OpenPopup*(), BeginPopupContext*(), IsPopupOpen() functions.
+//   - To be backward compatible with older API which took an 'int mouse_button = 1' argument instead of 'ImGuiPopupFlags flags',
+//     we need to treat small flags values as a mouse button index, so we encode the mouse button in the first few bits of the flags.
+//     It is therefore guaranteed to be legal to pass a mouse button index in ImGuiPopupFlags.
+//   - For the same reason, we exceptionally default the ImGuiPopupFlags argument of BeginPopupContextXXX functions to 1 instead of 0.
+//     IMPORTANT: because the default parameter is 1 (==ImGuiPopupFlags_MouseButtonRight), if you rely on the default parameter
+//     and want to use another flag, you need to pass in the ImGuiPopupFlags_MouseButtonRight flag explicitly.
+//   - Multiple buttons currently cannot be combined/or-ed in those functions (we could allow it later).
+//
+// original name: ImGuiPopupFlags_
+type PopupFlags int32
+
+const (
+	PopupFlagsNone = 0
+	// For BeginPopupContext*(): open on Left Mouse release. Guaranteed to always be == 0 (same as ImGuiMouseButton_Left)
+	PopupFlagsMouseButtonLeft = 0
+	// For BeginPopupContext*(): open on Right Mouse release. Guaranteed to always be == 1 (same as ImGuiMouseButton_Right)
+	PopupFlagsMouseButtonRight = 1
+	// For BeginPopupContext*(): open on Middle Mouse release. Guaranteed to always be == 2 (same as ImGuiMouseButton_Middle)
+	PopupFlagsMouseButtonMiddle  = 2
+	PopupFlagsMouseButtonMask    = 31
+	PopupFlagsMouseButtonDefault = 1
+	// For OpenPopup*(), BeginPopupContext*(): don't reopen same popup if already open (won't reposition, won't reinitialize navigation)
+	PopupFlagsNoReopen = 32
+	// For OpenPopup*(), BeginPopupContext*(): don't open if there's already a popup at the same level of the popup stack
+	PopupFlagsNoOpenOverExistingPopup = 128
+	// For BeginPopupContextWindow(): don't return true when hovering items, only when hovering empty space
+	PopupFlagsNoOpenOverItems = 256
+	// For IsPopupOpen(): ignore the ImGuiID parameter and test for any popup.
+	PopupFlagsAnyPopupId = 1024
+	// For IsPopupOpen(): search/test at any level of the popup stack (default test in the current level)
+	PopupFlagsAnyPopupLevel = 2048
+	PopupFlagsAnyPopup      = 3072
+)
+
+// original name: ImGuiPopupPositionPolicy
+type PopupPositionPolicy int32
+
+const (
+	PopupPositionPolicyDefault  = 0
+	PopupPositionPolicyComboBox = 1
+	PopupPositionPolicyTooltip  = 2
+)
+
+// Early work-in-progress API for ScrollToItem()
+// original name: ImGuiScrollFlags_
+type ScrollFlags int32
+
+const (
+	ScrollFlagsNone = 0
+	// If item is not visible: scroll as little as possible on X axis to bring item back into view [default for X axis]
+	ScrollFlagsKeepVisibleEdgeX = 1
+	// If item is not visible: scroll as little as possible on Y axis to bring item back into view [default for Y axis for windows that are already visible]
+	ScrollFlagsKeepVisibleEdgeY = 2
+	// If item is not visible: scroll to make the item centered on X axis [rarely used]
+	ScrollFlagsKeepVisibleCenterX = 4
+	// If item is not visible: scroll to make the item centered on Y axis
+	ScrollFlagsKeepVisibleCenterY = 8
+	// Always center the result item on X axis [rarely used]
+	ScrollFlagsAlwaysCenterX = 16
+	// Always center the result item on Y axis [default for Y axis for appearing window)
+	ScrollFlagsAlwaysCenterY = 32
+	// Disable forwarding scrolling to parent window if required to keep item/rect visible (only scroll window the function was applied to).
+	ScrollFlagsNoScrollParent = 64
+	ScrollFlagsMaskX          = 21
+	ScrollFlagsMaskY          = 42
+)
+
+// Extend ImGuiSelectableFlags_
+// original name: ImGuiSelectableFlagsPrivate_
+type SelectableFlagsPrivate int32
+
+const (
+	SelectableFlagsNoHoldingActiveID = 1048576
+	// (WIP) Auto-select when moved into. This is not exposed in public API as to handle multi-select and modifiers we will need user to explicitly control focus scope. May be replaced with a BeginSelection() API.
+	SelectableFlagsSelectOnNav = 2097152
+	// Override button behavior to react on Click (default is Click+Release)
+	SelectableFlagsSelectOnClick = 4194304
+	// Override button behavior to react on Release (default is Click+Release)
+	SelectableFlagsSelectOnRelease = 8388608
+	// Span all avail width even if we declared less for layout purpose. FIXME: We may be able to remove this (added in 6251d379, 2bcafc86 for menus)
+	SelectableFlagsSpanAvailWidth = 16777216
+	// Set Nav/Focus ID on mouse hover (used by MenuItem)
+	SelectableFlagsSetNavIdOnHover = 33554432
+	// Disable padding each side with ItemSpacing * 0.5f
+	SelectableFlagsNoPadWithHalfSpacing = 67108864
+	// Don't set key/input owner on the initial click (note: mouse buttons are keys! often, the key in question will be ImGuiKey_MouseLeft!)
+	SelectableFlagsNoSetKeyOwner = 134217728
+)
+
+// Flags for ImGui::Selectable()
+// original name: ImGuiSelectableFlags_
+type SelectableFlags int32
+
+const (
+	SelectableFlagsNone = 0
+	// Clicking this doesn't close parent popup window
+	SelectableFlagsDontClosePopups = 1
+	// Frame will span all columns of its container table (text will still fit in current column)
+	SelectableFlagsSpanAllColumns = 2
+	// Generate press events on double clicks too
+	SelectableFlagsAllowDoubleClick = 4
+	// Cannot be selected, display grayed out text
+	SelectableFlagsDisabled = 8
+	// (WIP) Hit testing to allow subsequent widgets to overlap this one
+	SelectableFlagsAllowOverlap = 16
+)
+
+// original name: ImGuiSeparatorFlags_
+type SeparatorFlags int32
+
+const (
+	SeparatorFlagsNone = 0
+	// Axis default to current layout type, so generally Horizontal unless e.g. in a menu bar
+	SeparatorFlagsHorizontal = 1
+	SeparatorFlagsVertical   = 2
+	// Make separator cover all columns of a legacy Columns() set.
+	SeparatorFlagsSpanAllColumns = 4
+)
+
+// Extend ImGuiSliderFlags_
+// original name: ImGuiSliderFlagsPrivate_
+type SliderFlagsPrivate int32
+
+const (
+	// Should this slider be orientated vertically?
+	SliderFlagsVertical = 1048576
+	// Consider using g.NextItemData.ItemFlags |= ImGuiItemFlags_ReadOnly instead.
+	SliderFlagsReadOnly = 2097152
+)
+
+// Flags for DragFloat(), DragInt(), SliderFloat(), SliderInt() etc.
+// We use the same sets of flags for DragXXX() and SliderXXX() functions as the features are the same and it makes it easier to swap them.
+// (Those are per-item flags. There are shared flags in ImGuiIO: io.ConfigDragClickToInputText)
+// original name: ImGuiSliderFlags_
+type SliderFlags int32
+
+const (
+	SliderFlagsNone = 0
+	// Clamp value to min/max bounds when input manually with CTRL+Click. By default CTRL+Click allows going out of bounds.
+	SliderFlagsAlwaysClamp = 16
+	// Make the widget logarithmic (linear otherwise). Consider using ImGuiSliderFlags_NoRoundToFormat with this if using a format-string with small amount of digits.
+	SliderFlagsLogarithmic = 32
+	// Disable rounding underlying value to match precision of the display format string (e.g. %.3f values are rounded to those 3 digits)
+	SliderFlagsNoRoundToFormat = 64
+	// Disable CTRL+Click or Enter key allowing to input text directly into the widget
+	SliderFlagsNoInput = 128
+	// [Internal] We treat using those bits as being potentially a 'float power' argument from the previous API that has got miscast to this enum, and will trigger an assert if needed.
+	SliderFlagsInvalidMask = 1879048207
+)
+
+// A sorting direction
+// original name: ImGuiSortDirection_
+type SortDirection int32
+
+const (
+	SortDirectionNone = 0
+	// Ascending = 0->9, A->Z etc.
+	SortDirectionAscending = 1
+	// Descending = 9->0, Z->A etc.
+	SortDirectionDescending = 2
+)
+
+// Enumeration for PushStyleVar() / PopStyleVar() to temporarily modify the ImGuiStyle structure.
+//   - The enum only refers to fields of ImGuiStyle which makes sense to be pushed/popped inside UI code.
+//     During initialization or between frames, feel free to just poke into ImGuiStyle directly.
+//   - Tip: Use your programming IDE navigation facilities on the names in the _second column_ below to find the actual members and their description.
+//     In Visual Studio IDE: CTRL+comma ("Edit.GoToAll") can follow symbols in comments, whereas CTRL+F12 ("Edit.GoToImplementation") cannot.
+//     With Visual Assist installed: ALT+G ("VAssistX.GoToImplementation") can also follow symbols in comments.
+//   - When changing this enum, you need to update the associated internal table GStyleVarInfo[] accordingly. This is where we link enum values to members offset/type.
+//
+// original name: ImGuiStyleVar_
+type StyleVar int32
+
+const (
+	// float     Alpha
+	StyleVarAlpha = 0
+	// float     DisabledAlpha
+	StyleVarDisabledAlpha = 1
+	// ImVec2    WindowPadding
+	StyleVarWindowPadding = 2
+	// float     WindowRounding
+	StyleVarWindowRounding = 3
+	// float     WindowBorderSize
+	StyleVarWindowBorderSize = 4
+	// ImVec2    WindowMinSize
+	StyleVarWindowMinSize = 5
+	// ImVec2    WindowTitleAlign
+	StyleVarWindowTitleAlign = 6
+	// float     ChildRounding
+	StyleVarChildRounding = 7
+	// float     ChildBorderSize
+	StyleVarChildBorderSize = 8
+	// float     PopupRounding
+	StyleVarPopupRounding = 9
+	// float     PopupBorderSize
+	StyleVarPopupBorderSize = 10
+	// ImVec2    FramePadding
+	StyleVarFramePadding = 11
+	// float     FrameRounding
+	StyleVarFrameRounding = 12
+	// float     FrameBorderSize
+	StyleVarFrameBorderSize = 13
+	// ImVec2    ItemSpacing
+	StyleVarItemSpacing = 14
+	// ImVec2    ItemInnerSpacing
+	StyleVarItemInnerSpacing = 15
+	// float     IndentSpacing
+	StyleVarIndentSpacing = 16
+	// ImVec2    CellPadding
+	StyleVarCellPadding = 17
+	// float     ScrollbarSize
+	StyleVarScrollbarSize = 18
+	// float     ScrollbarRounding
+	StyleVarScrollbarRounding = 19
+	// float     GrabMinSize
+	StyleVarGrabMinSize = 20
+	// float     GrabRounding
+	StyleVarGrabRounding = 21
+	// float     TabRounding
+	StyleVarTabRounding = 22
+	// float     TabBarBorderSize
+	StyleVarTabBarBorderSize = 23
+	// ImVec2    ButtonTextAlign
+	StyleVarButtonTextAlign = 24
+	// ImVec2    SelectableTextAlign
+	StyleVarSelectableTextAlign = 25
+	// float  SeparatorTextBorderSize
+	StyleVarSeparatorTextBorderSize = 26
+	// ImVec2    SeparatorTextAlign
+	StyleVarSeparatorTextAlign = 27
+	// ImVec2    SeparatorTextPadding
+	StyleVarSeparatorTextPadding = 28
+	// float     DockingSeparatorSize
+	StyleVarDockingSeparatorSize = 29
+	StyleVarCOUNT                = 30
+)
+
+// Extend ImGuiTabBarFlags_
+// original name: ImGuiTabBarFlagsPrivate_
+type TabBarFlagsPrivate int32
+
+const (
+	// Part of a dock node [we don't use this in the master branch but it facilitate branch syncing to keep this around]
+	TabBarFlagsDockNode  = 1048576
+	TabBarFlagsIsFocused = 2097152
+	// FIXME: Settings are handled by the docking system, this only request the tab bar to mark settings dirty when reordering tabs
+	TabBarFlagsSaveSettings = 4194304
+)
+
+// Flags for ImGui::BeginTabBar()
+// original name: ImGuiTabBarFlags_
+type TabBarFlags int32
+
+const (
+	TabBarFlagsNone = 0
+	// Allow manually dragging tabs to re-order them + New tabs are appended at the end of list
+	TabBarFlagsReorderable = 1
+	// Automatically select new tabs when they appear
+	TabBarFlagsAutoSelectNewTabs = 2
+	// Disable buttons to open the tab list popup
+	TabBarFlagsTabListPopupButton = 4
+	// Disable behavior of closing tabs (that are submitted with p_open != NULL) with middle mouse button. You may handle this behavior manually on user's side with if (IsItemHovered() && IsMouseClicked(2)) *p_open = false.
+	TabBarFlagsNoCloseWithMiddleMouseButton = 8
+	// Disable scrolling buttons (apply when fitting policy is ImGuiTabBarFlags_FittingPolicyScroll)
+	TabBarFlagsNoTabListScrollingButtons = 16
+	// Disable tooltips when hovering a tab
+	TabBarFlagsNoTooltip = 32
+	// Resize tabs when they don't fit
+	TabBarFlagsFittingPolicyResizeDown = 64
+	// Add scroll buttons when tabs don't fit
+	TabBarFlagsFittingPolicyScroll  = 128
+	TabBarFlagsFittingPolicyMask    = 192
+	TabBarFlagsFittingPolicyDefault = 64
+)
+
+// Extend ImGuiTabItemFlags_
+// original name: ImGuiTabItemFlagsPrivate_
+type TabItemFlagsPrivate int32
+
+const (
+	TabItemFlagsSectionMask = 192
+	// Track whether p_open was set or not (we'll need this info on the next frame to recompute ContentWidth during layout)
+	TabItemFlagsNoCloseButton = 1048576
+	// Used by TabItemButton, change the tab item behavior to mimic a button
+	TabItemFlagsButton = 2097152
+	// [Docking] Trailing tabs with the _Unsorted flag will be sorted based on the DockOrder of their Window.
+	TabItemFlagsUnsorted = 4194304
+)
+
+// Flags for ImGui::BeginTabItem()
+// original name: ImGuiTabItemFlags_
+type TabItemFlags int32
+
+const (
+	TabItemFlagsNone = 0
+	// Display a dot next to the title + set ImGuiTabItemFlags_NoAssumedClosure.
+	TabItemFlagsUnsavedDocument = 1
+	// Trigger flag to programmatically make the tab selected when calling BeginTabItem()
+	TabItemFlagsSetSelected = 2
+	// Disable behavior of closing tabs (that are submitted with p_open != NULL) with middle mouse button. You may handle this behavior manually on user's side with if (IsItemHovered() && IsMouseClicked(2)) *p_open = false.
+	TabItemFlagsNoCloseWithMiddleMouseButton = 4
+	// Don't call PushID()/PopID() on BeginTabItem()/EndTabItem()
+	TabItemFlagsNoPushId = 8
+	// Disable tooltip for the given tab
+	TabItemFlagsNoTooltip = 16
+	// Disable reordering this tab or having another tab cross over this tab
+	TabItemFlagsNoReorder = 32
+	// Enforce the tab position to the left of the tab bar (after the tab list popup button)
+	TabItemFlagsLeading = 64
+	// Enforce the tab position to the right of the tab bar (before the scrolling buttons)
+	TabItemFlagsTrailing = 128
+	// Tab is selected when trying to close + closure is not immediately assumed (will wait for user to stop submitting the tab). Otherwise closure is assumed when pressing the X, so if you keep submitting the tab may reappear at end of tab bar.
+	TabItemFlagsNoAssumedClosure = 256
+)
+
+// Enum for ImGui::TableSetBgColor()
+// Background colors are rendering in 3 layers:
+//   - Layer 0: draw with RowBg0 color if set, otherwise draw with ColumnBg0 if set.
+//   - Layer 1: draw with RowBg1 color if set, otherwise draw with ColumnBg1 if set.
+//   - Layer 2: draw with CellBg color if set.
+//
+// The purpose of the two row/columns layers is to let you decide if a background color change should override or blend with the existing color.
+// When using ImGuiTableFlags_RowBg on the table, each row has the RowBg0 color automatically set for odd/even rows.
+// If you set the color of RowBg0 target, your color will override the existing RowBg0 color.
+// If you set the color of RowBg1 or ColumnBg1 target, your color will blend over the RowBg0 color.
+// original name: ImGuiTableBgTarget_
+type TableBgTarget int32
+
+const (
+	TableBgTargetNone = 0
+	// Set row background color 0 (generally used for background, automatically set when ImGuiTableFlags_RowBg is used)
+	TableBgTargetRowBg0 = 1
+	// Set row background color 1 (generally used for selection marking)
+	TableBgTargetRowBg1 = 2
+	// Set cell background color (top-most color)
+	TableBgTargetCellBg = 3
+)
+
+// Flags for ImGui::TableSetupColumn()
+// original name: ImGuiTableColumnFlags_
+type TableColumnFlags int32
+
+const (
+	TableColumnFlagsNone = 0
+	// Overriding/master disable flag: hide column, won't show in context menu (unlike calling TableSetColumnEnabled() which manipulates the user accessible state)
+	TableColumnFlagsDisabled = 1
+	// Default as a hidden/disabled column.
+	TableColumnFlagsDefaultHide = 2
+	// Default as a sorting column.
+	TableColumnFlagsDefaultSort = 4
+	// Column will stretch. Preferable with horizontal scrolling disabled (default if table sizing policy is _SizingStretchSame or _SizingStretchProp).
+	TableColumnFlagsWidthStretch = 8
+	// Column will not stretch. Preferable with horizontal scrolling enabled (default if table sizing policy is _SizingFixedFit and table is resizable).
+	TableColumnFlagsWidthFixed = 16
+	// Disable manual resizing.
+	TableColumnFlagsNoResize = 32
+	// Disable manual reordering this column, this will also prevent other columns from crossing over this column.
+	TableColumnFlagsNoReorder = 64
+	// Disable ability to hide/disable this column.
+	TableColumnFlagsNoHide = 128
+	// Disable clipping for this column (all NoClip columns will render in a same draw command).
+	TableColumnFlagsNoClip = 256
+	// Disable ability to sort on this field (even if ImGuiTableFlags_Sortable is set on the table).
+	TableColumnFlagsNoSort = 512
+	// Disable ability to sort in the ascending direction.
+	TableColumnFlagsNoSortAscending = 1024
+	// Disable ability to sort in the descending direction.
+	TableColumnFlagsNoSortDescending = 2048
+	// TableHeadersRow() will not submit horizontal label for this column. Convenient for some small columns. Name will still appear in context menu or in angled headers.
+	TableColumnFlagsNoHeaderLabel = 4096
+	// Disable header text width contribution to automatic column width.
+	TableColumnFlagsNoHeaderWidth = 8192
+	// Make the initial sort direction Ascending when first sorting on this column (default).
+	TableColumnFlagsPreferSortAscending = 16384
+	// Make the initial sort direction Descending when first sorting on this column.
+	TableColumnFlagsPreferSortDescending = 32768
+	// Use current Indent value when entering cell (default for column 0).
+	TableColumnFlagsIndentEnable = 65536
+	// Ignore current Indent value when entering cell (default for columns > 0). Indentation changes _within_ the cell will still be honored.
+	TableColumnFlagsIndentDisable = 131072
+	// TableHeadersRow() will submit an angled header row for this column. Note this will add an extra row.
+	TableColumnFlagsAngledHeader = 262144
+	// Status: is enabled == not hidden by user/api (referred to as "Hide" in _DefaultHide and _NoHide) flags.
+	TableColumnFlagsIsEnabled = 16777216
+	// Status: is visible == is enabled AND not clipped by scrolling.
+	TableColumnFlagsIsVisible = 33554432
+	// Status: is currently part of the sort specs
+	TableColumnFlagsIsSorted = 67108864
+	// Status: is hovered by mouse
+	TableColumnFlagsIsHovered  = 134217728
+	TableColumnFlagsWidthMask  = 24
+	TableColumnFlagsIndentMask = 196608
+	TableColumnFlagsStatusMask = 251658240
+	// [Internal] Disable user resizing this column directly (it may however we resized indirectly from its left edge)
+	TableColumnFlagsNoDirectResize = 1073741824
+)
+
+// Flags for ImGui::BeginTable()
+//   - Important! Sizing policies have complex and subtle side effects, much more so than you would expect.
+//     Read comments/demos carefully + experiment with live demos to get acquainted with them.
+//   - The DEFAULT sizing policies are:
+//   - Default to ImGuiTableFlags_SizingFixedFit    if ScrollX is on, or if host window has ImGuiWindowFlags_AlwaysAutoResize.
+//   - Default to ImGuiTableFlags_SizingStretchSame if ScrollX is off.
+//   - When ScrollX is off:
+//   - Table defaults to ImGuiTableFlags_SizingStretchSame -> all Columns defaults to ImGuiTableColumnFlags_WidthStretch with same weight.
+//   - Columns sizing policy allowed: Stretch (default), Fixed/Auto.
+//   - Fixed Columns (if any) will generally obtain their requested width (unless the table cannot fit them all).
+//   - Stretch Columns will share the remaining width according to their respective weight.
+//   - Mixed Fixed/Stretch columns is possible but has various side-effects on resizing behaviors.
+//     The typical use of mixing sizing policies is: any number of LEADING Fixed columns, followed by one or two TRAILING Stretch columns.
+//     (this is because the visible order of columns have subtle but necessary effects on how they react to manual resizing).
+//   - When ScrollX is on:
+//   - Table defaults to ImGuiTableFlags_SizingFixedFit -> all Columns defaults to ImGuiTableColumnFlags_WidthFixed
+//   - Columns sizing policy allowed: Fixed/Auto mostly.
+//   - Fixed Columns can be enlarged as needed. Table will show a horizontal scrollbar if needed.
+//   - When using auto-resizing (non-resizable) fixed columns, querying the content width to use item right-alignment e.g. SetNextItemWidth(-FLT_MIN) doesn't make sense, would create a feedback loop.
+//   - Using Stretch columns OFTEN DOES NOT MAKE SENSE if ScrollX is on, UNLESS you have specified a value for 'inner_width' in BeginTable().
+//     If you specify a value for 'inner_width' then effectively the scrolling space is known and Stretch or mixed Fixed/Stretch columns become meaningful again.
+//   - Read on documentation at the top of imgui_tables.cpp for details.
+//
+// original name: ImGuiTableFlags_
+type TableFlags int32
+
+const (
+	TableFlagsNone = 0
+	// Enable resizing columns.
+	TableFlagsResizable = 1
+	// Enable reordering columns in header row (need calling TableSetupColumn() + TableHeadersRow() to display headers)
+	TableFlagsReorderable = 2
+	// Enable hiding/disabling columns in context menu.
+	TableFlagsHideable = 4
+	// Enable sorting. Call TableGetSortSpecs() to obtain sort specs. Also see ImGuiTableFlags_SortMulti and ImGuiTableFlags_SortTristate.
+	TableFlagsSortable = 8
+	// Disable persisting columns order, width and sort settings in the .ini file.
+	TableFlagsNoSavedSettings = 16
+	// Right-click on columns body/contents will display table context menu. By default it is available in TableHeadersRow().
+	TableFlagsContextMenuInBody = 32
+	// Set each RowBg color with ImGuiCol_TableRowBg or ImGuiCol_TableRowBgAlt (equivalent of calling TableSetBgColor with ImGuiTableBgFlags_RowBg0 on each row manually)
+	TableFlagsRowBg = 64
+	// Draw horizontal borders between rows.
+	TableFlagsBordersInnerH = 128
+	// Draw horizontal borders at the top and bottom.
+	TableFlagsBordersOuterH = 256
+	// Draw vertical borders between columns.
+	TableFlagsBordersInnerV = 512
+	// Draw vertical borders on the left and right sides.
+	TableFlagsBordersOuterV = 1024
+	// Draw horizontal borders.
+	TableFlagsBordersH = 384
+	// Draw vertical borders.
+	TableFlagsBordersV = 1536
+	// Draw inner borders.
+	TableFlagsBordersInner = 640
+	// Draw outer borders.
+	TableFlagsBordersOuter = 1280
+	// Draw all borders.
+	TableFlagsBorders = 1920
+	// [ALPHA] Disable vertical borders in columns Body (borders will always appear in Headers). -> May move to style
+	TableFlagsNoBordersInBody = 2048
+	// [ALPHA] Disable vertical borders in columns Body until hovered for resize (borders will always appear in Headers). -> May move to style
+	TableFlagsNoBordersInBodyUntilResize = 4096
+	// Columns default to _WidthFixed or _WidthAuto (if resizable or not resizable), matching contents width.
+	TableFlagsSizingFixedFit = 8192
+	// Columns default to _WidthFixed or _WidthAuto (if resizable or not resizable), matching the maximum contents width of all columns. Implicitly enable ImGuiTableFlags_NoKeepColumnsVisible.
+	TableFlagsSizingFixedSame = 16384
+	// Columns default to _WidthStretch with default weights proportional to each columns contents widths.
+	TableFlagsSizingStretchProp = 24576
+	// Columns default to _WidthStretch with default weights all equal, unless overridden by TableSetupColumn().
+	TableFlagsSizingStretchSame = 32768
+	// Make outer width auto-fit to columns, overriding outer_size.x value. Only available when ScrollX/ScrollY are disabled and Stretch columns are not used.
+	TableFlagsNoHostExtendX = 65536
+	// Make outer height stop exactly at outer_size.y (prevent auto-extending table past the limit). Only available when ScrollX/ScrollY are disabled. Data below the limit will be clipped and not visible.
+	TableFlagsNoHostExtendY = 131072
+	// Disable keeping column always minimally visible when ScrollX is off and table gets too small. Not recommended if columns are resizable.
+	TableFlagsNoKeepColumnsVisible = 262144
+	// Disable distributing remainder width to stretched columns (width allocation on a 100-wide table with 3 columns: Without this flag: 33,33,34. With this flag: 33,33,33). With larger number of columns, resizing will appear to be less smooth.
+	TableFlagsPreciseWidths = 524288
+	// Disable clipping rectangle for every individual columns (reduce draw command count, items will be able to overflow into other columns). Generally incompatible with TableSetupScrollFreeze().
+	TableFlagsNoClip = 1048576
+	// Default if BordersOuterV is on. Enable outermost padding. Generally desirable if you have headers.
+	TableFlagsPadOuterX = 2097152
+	// Default if BordersOuterV is off. Disable outermost padding.
+	TableFlagsNoPadOuterX = 4194304
+	// Disable inner padding between columns (double inner padding if BordersOuterV is on, single inner padding if BordersOuterV is off).
+	TableFlagsNoPadInnerX = 8388608
+	// Enable horizontal scrolling. Require 'outer_size' parameter of BeginTable() to specify the container size. Changes default sizing policy. Because this creates a child window, ScrollY is currently generally recommended when using ScrollX.
+	TableFlagsScrollX = 16777216
+	// Enable vertical scrolling. Require 'outer_size' parameter of BeginTable() to specify the container size.
+	TableFlagsScrollY = 33554432
+	// Hold shift when clicking headers to sort on multiple column. TableGetSortSpecs() may return specs where (SpecsCount > 1).
+	TableFlagsSortMulti = 67108864
+	// Allow no sorting, disable default sorting. TableGetSortSpecs() may return specs where (SpecsCount == 0).
+	TableFlagsSortTristate = 134217728
+	// Highlight column headers when hovered (may evolve into a fuller highlight)
+	TableFlagsHighlightHoveredColumn = 268435456
+	TableFlagsSizingMask             = 57344
+)
+
+// Flags for ImGui::TableNextRow()
+// original name: ImGuiTableRowFlags_
+type TableRowFlags int32
+
+const (
+	TableRowFlagsNone = 0
+	// Identify header row (set default background color + width of its contents accounted differently for auto column width)
+	TableRowFlagsHeaders = 1
+)
+
+// original name: ImGuiTextFlags_
+type TextFlags int32
+
+const (
+	TextFlagsNone                       = 0
+	TextFlagsNoWidthForLargeClippedText = 1
+)
+
+// original name: ImGuiTooltipFlags_
+type TooltipFlags int32
+
+const (
+	TooltipFlagsNone = 0
+	// Clear/ignore previously submitted tooltip (defaults to append)
+	TooltipFlagsOverridePrevious = 2
+)
+
+// Extend ImGuiTreeNodeFlags_
+// original name: ImGuiTreeNodeFlagsPrivate_
+type TreeNodeFlagsPrivate int32
+
+const (
+	TreeNodeFlagsClipLabelForTrailingButton = 1048576
+	// (FIXME-WIP) Turn Down arrow into an Up arrow, but reversed trees (#6517)
+	TreeNodeFlagsUpsideDownArrow = 2097152
+)
+
+// Flags for ImGui::TreeNodeEx(), ImGui::CollapsingHeader*()
+// original name: ImGuiTreeNodeFlags_
+type TreeNodeFlags int32
+
+const (
+	TreeNodeFlagsNone = 0
+	// Draw as selected
+	TreeNodeFlagsSelected = 1
+	// Draw frame with background (e.g. for CollapsingHeader)
+	TreeNodeFlagsFramed = 2
+	// Hit testing to allow subsequent widgets to overlap this one
+	TreeNodeFlagsAllowOverlap = 4
+	// Don't do a TreePush() when open (e.g. for CollapsingHeader) = no extra indent nor pushing on ID stack
+	TreeNodeFlagsNoTreePushOnOpen = 8
+	// Don't automatically and temporarily open node when Logging is active (by default logging will automatically open tree nodes)
+	TreeNodeFlagsNoAutoOpenOnLog = 16
+	// Default node to be open
+	TreeNodeFlagsDefaultOpen = 32
+	// Need double-click to open node
+	TreeNodeFlagsOpenOnDoubleClick = 64
+	// Only open when clicking on the arrow part. If ImGuiTreeNodeFlags_OpenOnDoubleClick is also set, single-click arrow or double-click all box to open.
+	TreeNodeFlagsOpenOnArrow = 128
+	// No collapsing, no arrow (use as a convenience for leaf nodes).
+	TreeNodeFlagsLeaf = 256
+	// Display a bullet instead of arrow. IMPORTANT: node can still be marked open/close if you don't set the _Leaf flag!
+	TreeNodeFlagsBullet = 512
+	// Use FramePadding (even for an unframed text node) to vertically align text baseline to regular widget height. Equivalent to calling AlignTextToFramePadding().
+	TreeNodeFlagsFramePadding = 1024
+	// Extend hit box to the right-most edge, even if not framed. This is not the default in order to allow adding other items on the same line. In the future we may refactor the hit system to be front-to-back, allowing natural overlaps and then this can become the default.
+	TreeNodeFlagsSpanAvailWidth = 2048
+	// Extend hit box to the left-most and right-most edges (bypass the indented area).
+	TreeNodeFlagsSpanFullWidth = 4096
+	// Frame will span all columns of its container table (text will still fit in current column)
+	TreeNodeFlagsSpanAllColumns = 8192
+	// (WIP) Nav: left direction may move to this TreeNode() from any of its child (items submitted between TreeNode and TreePop)
+	TreeNodeFlagsNavLeftJumpsBackHere = 16384
+	TreeNodeFlagsCollapsingHeader     = 26
+)
+
+// Flags for GetTypingSelectRequest()
+// original name: ImGuiTypingSelectFlags_
+type TypingSelectFlags int32
+
+const (
+	TypingSelectFlagsNone = 0
+	// Backspace to delete character inputs. If using: ensure GetTypingSelectRequest() is not called more than once per frame (filter by e.g. focus state)
+	TypingSelectFlagsAllowBackspace = 1
+	// Allow "single char" search mode which is activated when pressing the same character multiple times.
+	TypingSelectFlagsAllowSingleCharMode = 2
+)
+
+// Flags stored in ImGuiViewport::Flags, giving indications to the platform backends.
+// original name: ImGuiViewportFlags_
+type ViewportFlags int32
+
+const (
+	ViewportFlagsNone = 0
+	// Represent a Platform Window
+	ViewportFlagsIsPlatformWindow = 1
+	// Represent a Platform Monitor (unused yet)
+	ViewportFlagsIsPlatformMonitor = 2
+	// Platform Window: Was created/managed by the user application? (rather than our backend)
+	ViewportFlagsOwnedByApp = 4
+	// Platform Window: Disable platform decorations: title bar, borders, etc. (generally set all windows, but if ImGuiConfigFlags_ViewportsDecoration is set we only set this on popups/tooltips)
+	ViewportFlagsNoDecoration = 8
+	// Platform Window: Disable platform task bar icon (generally set on popups/tooltips, or all windows if ImGuiConfigFlags_ViewportsNoTaskBarIcon is set)
+	ViewportFlagsNoTaskBarIcon = 16
+	// Platform Window: Don't take focus when created.
+	ViewportFlagsNoFocusOnAppearing = 32
+	// Platform Window: Don't take focus when clicked on.
+	ViewportFlagsNoFocusOnClick = 64
+	// Platform Window: Make mouse pass through so we can drag this window while peaking behind it.
+	ViewportFlagsNoInputs = 128
+	// Platform Window: Renderer doesn't need to clear the framebuffer ahead (because we will fill it entirely).
+	ViewportFlagsNoRendererClear = 256
+	// Platform Window: Avoid merging this window into another host window. This can only be set via ImGuiWindowClass viewport flags override (because we need to now ahead if we are going to create a viewport in the first place!).
+	ViewportFlagsNoAutoMerge = 512
+	// Platform Window: Display on top (for tooltips only).
+	ViewportFlagsTopMost = 1024
+	// Viewport can host multiple imgui windows (secondary viewports are associated to a single window). // FIXME: In practice there's still probably code making the assumption that this is always and only on the MainViewport. Will fix once we add support for "no main viewport".
+	ViewportFlagsCanHostOtherWindows = 2048
+	// Platform Window: Window is minimized, can skip render. When minimized we tend to avoid using the viewport pos/size for clipping window or testing if they are contained in the viewport.
+	ViewportFlagsIsMinimized = 4096
+	// Platform Window: Window is focused (last call to Platform_GetWindowFocus() returned true)
+	ViewportFlagsIsFocused = 8192
+)
+
+// List of colors that are stored at the time of Begin() into Docked Windows.
+// We currently store the packed colors in a simple array window->DockStyle.Colors[].
+// A better solution may involve appending into a log of colors in ImGuiContext + store offsets into those arrays in ImGuiWindow,
+// but it would be more complex as we'd need to double-buffer both as e.g. drop target may refer to window from last frame.
+// original name: ImGuiWindowDockStyleCol
+type WindowDockStyleCol int32
+
+const (
+	WindowDockStyleColText               = 0
+	WindowDockStyleColTab                = 1
+	WindowDockStyleColTabHovered         = 2
+	WindowDockStyleColTabActive          = 3
+	WindowDockStyleColTabUnfocused       = 4
+	WindowDockStyleColTabUnfocusedActive = 5
+	WindowDockStyleColCOUNT              = 6
+)
+
+// Flags for ImGui::Begin()
+// (Those are per-window flags. There are shared flags in ImGuiIO: io.ConfigWindowsResizeFromEdges and io.ConfigWindowsMoveFromTitleBarOnly)
+// original name: ImGuiWindowFlags_
+type WindowFlags int32
+
+const (
+	WindowFlagsNone = 0
+	// Disable title-bar
+	WindowFlagsNoTitleBar = 1
+	// Disable user resizing with the lower-right grip
+	WindowFlagsNoResize = 2
+	// Disable user moving the window
+	WindowFlagsNoMove = 4
+	// Disable scrollbars (window can still scroll with mouse or programmatically)
+	WindowFlagsNoScrollbar = 8
+	// Disable user vertically scrolling with mouse wheel. On child window, mouse wheel will be forwarded to the parent unless NoScrollbar is also set.
+	WindowFlagsNoScrollWithMouse = 16
+	// Disable user collapsing window by double-clicking on it. Also referred to as Window Menu Button (e.g. within a docking node).
+	WindowFlagsNoCollapse = 32
+	// Resize every window to its content every frame
+	WindowFlagsAlwaysAutoResize = 64
+	// Disable drawing background color (WindowBg, etc.) and outside border. Similar as using SetNextWindowBgAlpha(0.0f).
+	WindowFlagsNoBackground = 128
+	// Never load/save settings in .ini file
+	WindowFlagsNoSavedSettings = 256
+	// Disable catching mouse, hovering test with pass through.
+	WindowFlagsNoMouseInputs = 512
+	// Has a menu-bar
+	WindowFlagsMenuBar = 1024
+	// Allow horizontal scrollbar to appear (off by default). You may use SetNextWindowContentSize(ImVec2(width,0.0f)); prior to calling Begin() to specify width. Read code in imgui_demo in the "Horizontal Scrolling" section.
+	WindowFlagsHorizontalScrollbar = 2048
+	// Disable taking focus when transitioning from hidden to visible state
+	WindowFlagsNoFocusOnAppearing = 4096
+	// Disable bringing window to front when taking focus (e.g. clicking on it or programmatically giving it focus)
+	WindowFlagsNoBringToFrontOnFocus = 8192
+	// Always show vertical scrollbar (even if ContentSize.y < Size.y)
+	WindowFlagsAlwaysVerticalScrollbar = 16384
+	// Always show horizontal scrollbar (even if ContentSize.x < Size.x)
+	WindowFlagsAlwaysHorizontalScrollbar = 32768
+	// No gamepad/keyboard navigation within the window
+	WindowFlagsNoNavInputs = 65536
+	// No focusing toward this window with gamepad/keyboard navigation (e.g. skipped by CTRL+TAB)
+	WindowFlagsNoNavFocus = 131072
+	// Display a dot next to the title. When used in a tab/docking context, tab is selected when clicking the X + closure is not assumed (will wait for user to stop submitting the tab). Otherwise closure is assumed when pressing the X, so if you keep submitting the tab may reappear at end of tab bar.
+	WindowFlagsUnsavedDocument = 262144
+	// Disable docking of this window
+	WindowFlagsNoDocking    = 524288
+	WindowFlagsNoNav        = 196608
+	WindowFlagsNoDecoration = 43
+	WindowFlagsNoInputs     = 197120
+	// [BETA] On child window: share focus scope, allow gamepad/keyboard navigation to cross over parent border to this child or between sibling child windows.
+	WindowFlagsNavFlattened = 8388608
+	// Don't use! For internal use by BeginChild()
+	WindowFlagsChildWindow = 16777216
+	// Don't use! For internal use by BeginTooltip()
+	WindowFlagsTooltip = 33554432
+	// Don't use! For internal use by BeginPopup()
+	WindowFlagsPopup = 67108864
+	// Don't use! For internal use by BeginPopupModal()
+	WindowFlagsModal = 134217728
+	// Don't use! For internal use by BeginMenu()
+	WindowFlagsChildMenu = 268435456
+	// Don't use! For internal use by Begin()/NewFrame()
+	WindowFlagsDockNodeHost = 536870912
 )

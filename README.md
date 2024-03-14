@@ -1,4 +1,4 @@
-# cimgui-go
+# cimgui-go [![GoDoc](https://pkg.go.dev/badge/github.com/AllenDang/cimgui-go?utm_source=godoc)](https://pkg.go.dev/mod/github.com/AllenDang/cimgui-go)
 
 This project aims to generate go wrapper for Dear ImGui.
 
@@ -13,23 +13,26 @@ It works on macOS(arm64/x86), windows(x64), Arch Linux/KDE and Fedora Workstatio
 4. Use github workflow to compile cimgui and glfw to static lib and place them in /lib folder for further link. 
 
 ## Naming convention
-For functions, 'Im/ImGui/ig' is trimmed.
-'GetCursorPos' is renamed to 'GetDrawCursor', same with "SetCursor...".
+
+- For functions, 'Im/ImGui/ig' is trimmed.
+- If function comes from `imgui_internal.h`, `Internal` prefix is added.
+- Struct fields (if any exported) are prefixed with word `Field`
 
 ## Function coverage
 Currently most of the functions are generated, except memory related stuff (eg. memory allocator, storage management, etc...).
 If you find any function is missing, report an issue.
 
 ## Generate binding
-Install [just](https://just.systems/)
+Install [GNU make](https://www.gnu.org/software/make/manual/make.html) and run `make` to re-generate bunding.
 
-### Update imgui
-1. Drop source code of imgui to `cimgui/imgui`.
-2. Run `cd cimgui/generator; ./generator.sh`.
-3. Run `just gencode_cimgui`.
+## Update
 
-### Update implot
-1. Drop source code of implot to `cimplot/implot`.
-2. Run `cd cimplot/generator; ./generator.sh`.
-3. Run `just gencode_cimplot`.
+To update to the latest version of dependencies, run `make update`.
+After doing this, commit changes and navigate to GitHub.
+In Actions tab, manually trigger workflows for each platform.
 
+## How does it work?
+
+- `cimgui/` directory holds C binding for C++ Dear ImGui libraries
+- generator bases on `cimgui/{package_name}_templates` and generates all necessary GO/C code
+- `libs/` contains pre-built shared libraries. `cimgui.go` includes and uses to decrease building time.
